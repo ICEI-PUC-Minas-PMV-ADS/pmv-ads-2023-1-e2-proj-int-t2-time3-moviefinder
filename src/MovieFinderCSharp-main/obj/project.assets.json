@@ -3978,24 +3978,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pedro\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Juliana Dutra\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pedro\\Desenvolvimento\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj",
+      "projectUniqueName": "C:\\Users\\Juliana Dutra\\Desenvolvimento\\Repositorios\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj",
       "projectName": "moviefinder",
-      "projectPath": "C:\\Users\\pedro\\Desenvolvimento\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj",
-      "packagesPath": "C:\\Users\\pedro\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pedro\\Desenvolvimento\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\obj\\",
+      "projectPath": "C:\\Users\\Juliana Dutra\\Desenvolvimento\\Repositorios\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj",
+      "packagesPath": "C:\\Users\\Juliana Dutra\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Juliana Dutra\\Desenvolvimento\\Repositorios\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\pedro\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Juliana Dutra\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4073,7 +4068,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }

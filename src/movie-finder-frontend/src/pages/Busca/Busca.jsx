@@ -16,10 +16,10 @@ function Busca() {
   const [movies, setMovies] = useState([]);
   const [popularMovies, setPopularMovies] = useState([]);
   const [genreList, setGenreList] = useState([])
-  
+
   const navigate = useNavigate()
 
-  const gotoDetails = (movie) => { 
+  const gotoDetails = (movie) => {
     navigate(`/Resultado/${movie.id}`);
   }
 
@@ -52,13 +52,13 @@ function Busca() {
     matchFrom: 'start',
     stringify: (option) => option.title,
   });
-  
+
   const handleChange = async (event, inputValue) => {
     setQuery(inputValue);
     if (inputValue === '') {
       setMovies(popularMovies)
       return
-    } 
+    }
     const response = await findMovie(inputValue);
     setMovies(response);
   }
@@ -67,7 +67,7 @@ function Busca() {
     const response = await api.get(`/movieFinder/movie_query/${query}`)
     return response.data.results;
   }
-   
+
   const getPopularMovies = async () => {
     const response = await api.get('/movieFinder/movie/popularity')
     setMovies(response.data)
@@ -76,9 +76,9 @@ function Busca() {
 
   const getGenreList = async () => {
     const response = await api.get('/movieFinder/genre/list')
-    setGenreList(response.data.genres) 
+    setGenreList(response.data.genres)
   }
-  
+
   useEffect(() => {
     getPopularMovies()
     getGenreList()
@@ -125,16 +125,22 @@ function Busca() {
               <MenuItem onClick={orderMoviesByWorstVote}> Piores avaliados </MenuItem>
             </SubMenu>
           </div>
+            <div className="sidebar-favorite-search">
+                <h3>Favoritos</h3>
+                <MenuItem>Meus Favoritos</MenuItem>
+                <MenuItem>Recomendados para você</MenuItem>
+            </div>
+
         </Menu>
       </Sidebar>
       <div className='results-search'>
         <h1>Resultados</h1>
         <div className='results-search-cards'>
-          {movies.map((movie) => movie.posterPath && 
+          {movies.map((movie) => movie.posterPath &&
             <div onClick={ () => gotoDetails(movie) }>
               <MovieCard movie={movie} posterSize="200px"/>
             </div>
-          )} 
+          )}
         </div>
       </div>
 
