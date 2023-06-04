@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {api} from "../../services/api";
 
 import {Swiper, SwiperSlide} from "swiper/react";
-import {MdKeyboardArrowRight} from "react-icons/Md"
+import {MdKeyboardArrowRight} from "react-icons/md"
 import {GoSearch} from "react-icons/go"
 import SwiperCore, {Autoplay, Navigation, Pagination, Virtual} from "swiper";
 import {Link, useNavigate} from 'react-router-dom';
