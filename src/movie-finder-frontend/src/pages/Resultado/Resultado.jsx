@@ -41,6 +41,7 @@ function Resultado() {
   const token = Cookies.get('moviefinder-token');
   const {userDto} = authContext;
   const {favorito} = authContext;
+  const [favoritoLocal, setFavoritoLocal] = useState(favorito);
 
   const navigate = useNavigate()
 
@@ -63,14 +64,28 @@ function Resultado() {
       },
     });
 
-    console.log(response);
-    return response;
+    return setFavoritoLocal(response.data);
   };
 
-  const starFillCheck = () =>  {
-    if (!favorito) {
-        setStarFill(!starFill)
-        favoriteMovie()
+  const unfavoriteMovie  = async () => {
+    const response = await api.get(`/movieFinder/desfavoritarFilme/${movie.id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    return setFavoritoLocal(response.data);
+  };
+
+  const starFillCheck = (event) =>  {
+    if (!event.type === 'click' && favorito) {
+        setStarFill(true)
+    } else if (event.type === 'click' && !favoritoLocal) {
+      setFavoritoLocal(favoriteMovie())
+      setStarFill(true)
+    } else if (event.type === 'click' && favoritoLocal) {
+      setStarFill(false)
+      setFavoritoLocal(!unfavoriteMovie())
     }
   }
 
@@ -97,8 +112,13 @@ function Resultado() {
   }
 
   const getRecomendationMovies = async () => {
-    const response = await api.get(`/movieFinder/recommendation/list/${id}`)
-    setRecomendationMovies(response.data.results)
+    const response = await api.get(`/movieFinder/recommendation/list`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+    });
+
+    setRecomendationMovies(response?.data)
 
   }
 

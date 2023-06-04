@@ -1,10 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using moviefinder.client;
 using moviefinder.dto;
 using moviefinder.dto.filme;
@@ -308,6 +303,42 @@ public class FilmeController : ControllerBase
             var isFilmeFavoritado = await _usuarioService.isFilmeFavoritado(usuarioId, movieId);
 
             return Ok(isFilmeFavoritado);
+        }
+
+        return Unauthorized();
+    }
+    
+    [HttpGet("desfavoritarFilme/{movieId}")]
+    public async Task<IActionResult> DesfavoritarFilme([FromHeader(Name = "Authorization")] string authorizationHeader,
+        string movieId)
+    {
+        if (authorizationHeader.StartsWith("Bearer "))
+        {
+            var token = authorizationHeader.Substring("Bearer ".Length);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var filmeDesfavoritado = await _filmeService.DesfavoritarFilme(userId, movieId);
+
+                if (filmeDesfavoritado)
+                {
+                    return Ok(filmeDesfavoritado);
+                }
+                else
+                {
+                    var responseErro = new
+                    {
+                        Message = "Filme não encontrado ou não foi favoritado pelo usuario",
+                        MovieDBId = movieId
+                    };
+
+                    return BadRequest(responseErro);
+                }
+            }
         }
 
         return Unauthorized();

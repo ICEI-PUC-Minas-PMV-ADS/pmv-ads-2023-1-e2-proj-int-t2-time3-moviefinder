@@ -96,5 +96,35 @@ public class FilmeService
         return filmeFavoritoLista;
     }
     
+    public async Task<bool> DesfavoritarFilme(string userId, string movieId)
+    {
+        try
+        {
+            var filmeDb = await GetFilmeByTheMovieDbId(int.Parse(movieId));
+            var usuario = await _context.Usuarios.FindAsync(int.Parse(userId));
+
+            if (filmeDb != null)
+            {
+                var filmesFavoritosByUsuarioAndFilme = await GetFilmesFavoritosByUsuarioAndFilme(usuario, filmeDb);
+
+                if (filmesFavoritosByUsuarioAndFilme != null)
+                {
+                    _context.FilmesFavoritos.Remove(filmesFavoritosByUsuarioAndFilme);
+                    await _context.SaveChangesAsync();
+
+                    return true;
+                }
+
+                return false;
+            }
+            return false;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Ocorreu um erro: {e.Message}");
+            throw;
+        }
+    }
+    
 }
 
