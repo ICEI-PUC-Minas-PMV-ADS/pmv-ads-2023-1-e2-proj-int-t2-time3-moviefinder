@@ -5,10 +5,10 @@ import React, {useContext, useEffect, useState} from "react";
 
 import MovieCard from '../../components/MovieCard/MovieCard'
 
-import { Link, useNavigate } from 'react-router-dom';
-import { Sidebar, Menu, MenuItem, SubMenu, sidebarClasses } from 'react-pro-sidebar';
+import {Link, useNavigate} from 'react-router-dom';
+import {Menu, MenuItem, Sidebar, SubMenu} from 'react-pro-sidebar';
 import FormControl from '@mui/joy/FormControl';
-import Autocomplete, { createFilterOptions } from '@mui/joy/Autocomplete';
+import Autocomplete, {createFilterOptions} from '@mui/joy/Autocomplete';
 import {AuthContext} from "../../contexts/AuthContext.jsx";
 import Cookies from "js-cookie";
 
@@ -63,15 +63,14 @@ function Busca() {
     matchFrom: 'start',
     stringify: (option) => option.title,
   });
-  
-  const handleChange = async (event) => {
-    const newInputValue = event.target.value;
-    setQuery(newInputValue);
-    if (newInputValue === '') {
+
+  const handleChange = async (event, inputValue) => {
+    setQuery(inputValue);
+    if (inputValue === '') {
       setMovies(popularMovies)
       return
-    } 
-    const response = await findMovie(newInputValue);
+    }
+    const response = await findMovie(inputValue);
     setMovies(response);
   }
 
@@ -142,6 +141,7 @@ function Busca() {
                 inputValue={query}
                 onInputChange={handleChange}
                 style={{margin: "30px"}}
+                clearOnBlur={false}
               />
             </div>
           </FormControl>
