@@ -356,6 +356,405 @@ const gotoDetails = async (movie) => {
           </div>
         </div>
  ```
+ 
+## Favoritos do usuário e conteúdos relacionados (RF-06)
+
+O usuário logado pode favoritar filmes ao longo de todo o site por meio do icone de favorito representado por um coração logo a abaixo do pôster da foto. Ao favoritar um filme, a informação é armazena no banco de dados e na aba "Meus Favoritos" o usuário pode visualizar os filmes favoritados por ele. Logo a abaixo na aba "Recomendados para você" o usuário pode visualizar os filmes recomendados baseado em seus favoritos.  
+
+### Requisitos atendidos
+RF-06 - A aplicação deve sugerir conteúdos relacionados às buscas já realizadas anteriormente e faviritar conteúdos.	
+ 
+ ### Artefatos da funcionalidade
+- Home.jsx
+- Busca.jsx
+- Resultado.jsx
+- AuthContext.jsx
+- FilmeController.cs
+- UsuarioService.cs
+
+```C# 
+ [HttpPost("favoritarFilme")]
+    public async Task<IActionResult> FavoritarFilme([FromHeader(Name = "Authorization")] string authorizationHeader,
+        [FromBody] FilmeDto filmeDto)
+    {
+        if (authorizationHeader.StartsWith("Bearer "))
+        {
+            var token = authorizationHeader.Substring("Bearer ".Length);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var filmeFavoritado = await _filmeService.FavoritarFilme(userId, filmeDto);
+
+                if (filmeFavoritado)
+                {
+                    return Ok(filmeFavoritado);
+                }
+                else
+                {
+                    var responseErro = new
+                    {
+                        Message = "Filme já favoritado!",
+                        Data = filmeDto.Title
+                    };
+
+                    return BadRequest(responseErro);
+                }
+            }
+        }
+
+        return Unauthorized();
+    }
+```
+
+```C#
+    [HttpGet("favoriteList")]
+    public async Task<IActionResult> getFavoritesMoviesList(
+        [FromHeader(Name = "Authorization")] string authorizationHeader)
+    {
+        if (authorizationHeader.StartsWith("Bearer "))
+        {
+            var token = authorizationHeader.Substring("Bearer ".Length);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var favoritesList = await _filmeService.GetListaFilmesFavoritosByUsuario(int.Parse(userId));
+                
+                List<FilmeDto> listaFilmes = new List<FilmeDto>();
+
+                foreach (var favorito in favoritesList)
+                {
+                    var response = await _theMovieDataBaseClient.FindMovieById(favorito.IdFilme.TheMovieDbId.ToString(),
+                        _apiKey, _apiLanguage);
+                    var movieById = JsonConvert.DeserializeObject<FilmeDto>(response);
+                    listaFilmes.Add(movieById);
+                }
+
+                return Ok(listaFilmes);
+                
+            }
+        }
+
+        return Unauthorized();
+    }
+ ```
+ 
+ ```C#
+  [HttpGet("isFilmeFavoritado/{movieId}")]
+    public async Task<IActionResult> IsFilmeFavoritado([FromHeader(Name = "Authorization")] string authorizationHeader,
+        string movieId)
+    {
+        if (authorizationHeader.StartsWith("Bearer "))
+        {
+            var token = authorizationHeader.Substring("Bearer ".Length);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var usuarioId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+
+            var isFilmeFavoritado = await _usuarioService.isFilmeFavoritado(usuarioId, movieId);
+
+            return Ok(isFilmeFavoritado);
+        }
+
+        return Unauthorized();
+    }
+```
+
+```C#    
+    [HttpGet("desfavoritarFilme/{movieId}")]
+    public async Task<IActionResult> DesfavoritarFilme([FromHeader(Name = "Authorization")] string authorizationHeader,
+        string movieId)
+    {
+        if (authorizationHeader.StartsWith("Bearer "))
+        {
+            var token = authorizationHeader.Substring("Bearer ".Length);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var filmeDesfavoritado = await _filmeService.DesfavoritarFilme(userId, movieId);
+
+                if (filmeDesfavoritado)
+                {
+                    return Ok(filmeDesfavoritado);
+                }
+                else
+                {
+                    var responseErro = new
+                    {
+                        Message = "Filme não encontrado ou não foi favoritado pelo usuario",
+                        MovieDBId = movieId
+                    };
+
+                    return BadRequest(responseErro);
+                }
+            }
+        }
+
+        return Unauthorized();
+    }
+ ```
+ 
+ ```C#  
+ public async Task<bool> FavoritarFilme(string userId, FilmeDto filmeDto)
+    {
+        try
+        {
+            var theMovieDbId = filmeDto.Id;
+            var filmeDb = await GetFilmeByTheMovieDbId(theMovieDbId);
+            var usuario = await _context.Usuarios.FindAsync(int.Parse(userId));
+
+            if (filmeDb != null)
+            {
+                var filmesFavoritosByUsuarioAndFilme = await GetFilmesFavoritosByUsuarioAndFilme(usuario, filmeDb);
+
+                if (filmesFavoritosByUsuarioAndFilme == null)
+                {
+                    var filmeFavorito = new FilmeFavorito
+                    {
+                        IdFilme = filmeDb,
+                        IdUsuario = usuario
+                    };
+                    
+                    _context.Add(filmeFavorito);
+                    await _context.SaveChangesAsync();
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            {
+                var filme = new Filme
+                {
+                    Nome = filmeDto.Title,
+                    TheMovieDbId = filmeDto.Id
+                };
+
+                var filmeFavorito = new FilmeFavorito
+                {
+                    IdFilme = filme,
+                    IdUsuario = usuario
+                };
+                
+                _context.Add(filmeFavorito);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Ocorreu um erro: {e.Message}");
+            throw;
+        }
+    }
+ ```
+ 
+  ```C#  
+  public async Task<bool> DesfavoritarFilme(string userId, string movieId)
+    {
+        try
+        {
+            var filmeDb = await GetFilmeByTheMovieDbId(int.Parse(movieId));
+            var usuario = await _context.Usuarios.FindAsync(int.Parse(userId));
+
+            if (filmeDb != null)
+            {
+                var filmesFavoritosByUsuarioAndFilme = await GetFilmesFavoritosByUsuarioAndFilme(usuario, filmeDb);
+
+                if (filmesFavoritosByUsuarioAndFilme != null)
+                {
+                    _context.FilmesFavoritos.Remove(filmesFavoritosByUsuarioAndFilme);
+                    await _context.SaveChangesAsync();
+
+                    return true;
+                }
+
+                return false;
+            }
+            return false;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Ocorreu um erro: {e.Message}");
+            throw;
+        }
+    }
+```
+
+```C# 
+  public async Task<List<FilmeFavorito>> GetListaFilmesFavoritosByUsuario(int usuarioId)
+    {
+        var usuarioDb = await _context.Usuarios.FindAsync(usuarioId);
+        
+        var filmeFavoritoLista = await _context.FilmesFavoritos
+            .Include(ff => ff.IdFilme)
+            .Where(ff => ff.IdUsuario == usuarioDb)
+            .ToListAsync();
+        
+        return filmeFavoritoLista;
+    }
+```
+
+```C# 
+private async Task<FilmeFavorito?> GetFilmesFavoritosByUsuarioAndFilme(Usuario usuario, Filme filme)
+    {
+        
+        var filmeFavorito = await _context.FilmesFavoritos
+            .FirstOrDefaultAsync(ff => ff.IdUsuario == usuario && ff.IdFilme == filme);
+    
+        return filmeFavorito;
+    }
+```
+
+```C#
+    public async Task<bool> isFilmeFavoritado(string usuarioId, string movieId)
+    {
+        var filmeFavoritado = await _context.FilmesFavoritos
+            .AnyAsync(ff => ff.IdUsuario.Id == int.Parse(usuarioId) && ff.IdFilme.TheMovieDbId == int.Parse(movieId));
+
+        return filmeFavoritado;
+    }
+```
+
+```javascript
+ async function isFavorite(movie) {
+        const token = Cookies.get('moviefinder-token');
+        const response = await api.get(`/movieFinder/isFilmeFavoritado/${movie.id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setFavorito(response.data);
+    }
+```
+```javascript
+const showModalFavorites = () => {
+        setvisibleFavorites(true);
+    }
+```    
+```javascript
+    const closeModalFavorites = () => {
+        setvisibleFavorites(false);
+    }
+```
+```javascript
+ const getFavoritesList = async () => {
+    const response = await api.get(`/movieFinder/favoriteList`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+    });
+    setMovies(response.data)
+    setFavoriteMovies(response.data)
+  }
+```
+```javascript
+const getRecommendedMovies = async () => {
+    const response = await api.get(`/movieFinder/recommendation/list`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+    });
+    const orderMovies = [...response?.data].sort((a, b) => {
+      a = a.releaseDate.split('/').reverse().join('');
+      b = b.releaseDate.split('/').reverse().join('');
+      return b > a ? 1 : b < a ? -1 : 0;
+    })
+    setMovies(orderMovies)
+    setRecommendedMovies(response?.data)
+  }
+```
+ const unfavoriteMovie  = async () => {
+    const response = await api.get(`/movieFinder/desfavoritarFilme/${movie.id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    return setFavoritoLocal(response.data);
+  };
+  ```javascript
+    const starFillCheck = (event) =>  {
+    if (!event.type === 'click' && favorito) {
+        setStarFill(true)
+    } else if (event.type === 'click' && !favoritoLocal) {
+      setFavoritoLocal(favoriteMovie())
+      setStarFill(true)
+    } else if (event.type === 'click' && favoritoLocal) {
+      setStarFill(false)
+      setFavoritoLocal(!unfavoriteMovie())
+    }
+  }
+  ```
+```javascript
+ const favoriteMovie  = async () => {
+    const response = await api.post('/movieFinder/favoritarFilme', movie, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    return setFavoritoLocal(response.data);
+  };
+```
+```html
+<div>
+                            {userDto !== null ? (
+                                <div style={{display: 'flex'}}>
+                                    <h2 style={{paddingRight: '15px'}} onClick={showModalFavorites}>{userDto.nome}</h2>
+                                    <h2 onClick={logout}>Logout</h2>
+                                </div>
+                            ) : (
+                                <div style={{display: 'flex'}}>
+                                    <h2 onClick={showModalRegister} style={{paddingRight: '15px'}}>Cadastro</h2>
+                                    <h2 onClick={showModalLogin}>Login</h2>
+                                </div>
+                            )}
+                        </div>
+```
+```html
+<div className="sidebar-favorite-search">
+              <h3>Favoritos</h3>
+              {authenticated ? (
+                  <>
+                    <MenuItem onClick={getFavoritesList}> Meus Favoritos </MenuItem>
+                    <MenuItem onClick={getRecommendedMovies}> Recomendados para você </MenuItem>
+                  </>
+              ) : (
+                  <p className='results-message-login'>Faça login ou cadastre-se para favoritar suas preferências e ver recomendações!</p>
+              )}
+            </div>
+```
+```html
+            <div className='results-movie-details-card-streaming'>
+              {movie?.providers?.results?.br?.flatrate !== null && movie?.providers?.results?.br?.flatrate[0].logoPath ?
+              <img src={"https://image.tmdb.org/t/p/original/" + movie?.providers?.results?.br?.flatrate[0].logoPath} alt="plataforma" />
+              : <p>?</p> }
+              {authenticated && (<div className='results-movie-details-favorite'>
+                <h4 className='results-movie-details-favorite-circle' onClick={ starFillCheck }>
+                  {starFill || favorito ? <span><MdOutlineFavorite className='results-movie-details-favorite-icon' style={{color: "rgba(255, 0, 0, 0.596"}} /></span> :
+                      <span><MdOutlineFavorite className='results-movie-details-favorite-icon' /></span>}
+                </h4>
+              </div>)}
+              <div className='results-movie-details-card-streaming-text'>
+                <p>Disponivel em</p>
+                <h2>Asista agora</h2>
+              </div>
+            </div>
+```
 
 ## Cadastro de Usuário (RF-07)
 
