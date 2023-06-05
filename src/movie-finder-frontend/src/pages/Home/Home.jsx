@@ -59,6 +59,7 @@ function Home() {
     const {authenticated} = authContext;
     const token = Cookies.get('moviefinder-token');
     const {favorito} = authContext;
+    const [isSubmitButtonEnabled, setIsSubmitButtonEnabled ] = useState(true);
 
     const showModalFavorites = () => {
         setvisibleFavorites(true);
@@ -111,6 +112,7 @@ function Home() {
                 (isPasswordValid && password !== '' && (password.length >= 5 && password.length <= 8)) &&
                 (isPasswordConfirmationValid && passwordConfirmation !== '' && (passwordConfirmation.length >= 5 && passwordConfirmation.length <= 8 && passwordConfirmation === password)) &&
                 ((isAgeValid && age !== '') && 12 <= age <= 100)) {
+                setIsSubmitButtonEnabled(false)
                 const response = await api.post('/movieFinder/cadastrarUsuario', {
                     nome: name,
                     email,
@@ -118,6 +120,7 @@ function Home() {
                     idade: parseInt(age),
                     genero: genre,
                 })
+                setIsSubmitButtonEnabled(true)
                 closeModalRegister()
                 setSeverity("success");
                 setMessage(response.data.message);
@@ -157,6 +160,7 @@ function Home() {
             }
 
         } catch (error) {
+            setIsSubmitButtonEnabled(true)
             if (error.response && error.response.data) {
                 setSeverity("error");
                 setMessage(error.response.data.message);
@@ -530,6 +534,7 @@ function Home() {
                                     />
                                     <p>Crie sua conta agora no MovieFinder</p>
                                     <Button
+                                        disabled={!isSubmitButtonEnabled}
                                         className="modal-register-button"
                                         onClick={handleSubmit}
                                     >

@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Entities"
   ],
-  "SelectedNode": "\\moviefinder.sln",
+  "SelectedNode": "\\Entities\\Ator.cs",
   "PreviewInSolutionExplorer": false
 }
