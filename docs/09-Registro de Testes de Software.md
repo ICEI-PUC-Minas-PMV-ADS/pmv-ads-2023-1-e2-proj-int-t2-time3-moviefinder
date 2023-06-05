@@ -22,7 +22,16 @@ https://user-images.githubusercontent.com/114538749/236691685-294c37d9-d12a-49cd
 | Conclusão do teste | Ao realizar login uma mensagem de êxito é exibida. O nome do usuário é exibido no canto superior direito da página e os conteúdos relacionados ao usuário, como favoritos, são exibidos corretamente mesmo alterando o usuário. |
 | Print dos Testes |
 
-https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/b976d91e-cbdc-4ed1-990b-6c60e4c74713
+| Caso de Teste | CT-03 – Ler/Editar/Excluir Dados do perfil |
+|---------------|--------------------------|
+| Requisitos Associados |RF-007 - A aplicação deve permitir ao usuário cadastrar, ler, atualizar e excluir suas informações de cadastro. |
+| Objetivo do Teste | Verificar se o usuário consegue realizar a edição dos dados ou exclusão do cadastro. |
+| Passos | 1 - Abrir o navegador <br> 2 - Acessar a aplicação <br> 3 - Na página inicial, clicar em "Perfil" <br> 4 - Na página de perfil, clicar em "Alterar Dados" ou "Excluir Conta" <br> 5 - Caso a opção escolhida seja a alteração dos dados, alterar os campos desejados e manter os campos obrigatórios preenchidos <br> 6 - Clicar em "Concluir"|
+| Critérios de Êxito | - As informações do perfil foram alteradas com sucesso de acordo com as informações oferecidas pelo usuário, ou caso a opção selecionada seja a exclusão, o cadastro foi excluído e não é mais possível acessar a conta com as credenciais escolhidas |
+| Conclusão do teste | A edição dos dados ou exclusão de contas ainda não é possível |
+| Print dos Testes |
+
+![Imagem do WhatsApp de 2023-06-04 à(s) 23 49 54](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/894a5ee8-19f7-4313-933c-8a8ffc91b897)
 
 | Caso de Teste | CT-04 – Pesquisa de filmes |
 |---------------|--------------------------|
