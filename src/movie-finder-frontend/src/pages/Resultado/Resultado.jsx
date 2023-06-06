@@ -379,6 +379,7 @@ function Resultado() {
             </div>
           </div>
         </div>
+        {recomendationMovies?.length > 0 &&
         <div className='recommendation-movies'>
           <div className='recommendation-movies-text'>
             <h2>Filmes Recomendados</h2>
@@ -411,6 +412,7 @@ function Resultado() {
           ))}
         </Swiper>
         </div>
+        }
         <div className='recommendation-movies'>
           <div className='recommendation-movies-text'>
             <h2>Filmes do mesmo gênero</h2>
