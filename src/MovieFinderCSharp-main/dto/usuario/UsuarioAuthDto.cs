@@ -9,4 +9,6 @@ public class UsuarioAuthDto
     public int Idade { get; set; }
     
     public string Genero { get; set; }
+
+    public int Id { get; set;}
 }

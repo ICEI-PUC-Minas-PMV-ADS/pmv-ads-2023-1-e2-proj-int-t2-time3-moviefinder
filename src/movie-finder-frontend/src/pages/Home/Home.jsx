@@ -53,14 +53,17 @@ function Home() {
     const [open, setOpen] = React.useState(false);
     const [message, setMessage] = useState('');
     const [severity, setSeverity] = useState('success');
+    const [newName, setNewName] = useState('');
+    const [newPassword, setNewPassword] = useState('');
     const authContext = useContext(AuthContext);
     const {userDto} = authContext;
     const {authenticated} = authContext;
     const token = Cookies.get('moviefinder-token');
-    const {favorito} = authContext;
-    const [isSubmitButtonEnabled, setIsSubmitButtonEnabled] = useState(true);
+    const {changeName} = authContext;
+    const [isSubmitButtonEnabled, setIsSubmitButtonEnabled ] = useState(true);
 
     const showModalFavorites = () => {
+        setNewName(userDto.nome)
         setvisibleFavorites(true);
     }
     const closeModalFavorites = () => {
@@ -313,6 +316,46 @@ function Home() {
         setPasswordLogin(passwordLogin);
     }
 
+    const deleteUser = async () => {
+        const confirmDelete = confirm("tem certeza que deseja deletar sua conta?");
+        if (confirmDelete) {
+            api.delete('/movieFinder/deletarUsuario',
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+            authContext.logOut();
+            closeModalFavorites()
+            setSeverity("success");
+            setMessage("Usuario deletado");
+            setOpen(true)
+        }
+    }
+
+    const updateUser = async () => {
+            await api.put('/movieFinder/alterarInformacoesUsuario',
+            {
+                nome: newName,
+                id: userDto.id,
+                senha: newPassword,
+                email: userDto.email,
+                genero: userDto.genero,
+                idade: userDto.idade,
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+            closeModalFavorites()
+            setSeverity("success");
+            setMessage("Usuario alterado");
+            setOpen(true)
+            changeName(newName)
+            console.log("fodas", userDto.id);
+        }
+
     useEffect(() => {
         getPopularMovies()
         getTopRatedMovies()
@@ -371,8 +414,9 @@ function Home() {
                                     <FormControl>
                                         <FormLabel>E-mail:</FormLabel>
                                         <Input
-                                            disabled={false}
+                                            disabled={true}
                                             size="md"
+                                            value={userDto?.email}
                                         />
                                     </FormControl>
                                     <FormControl>
@@ -380,22 +424,33 @@ function Home() {
                                         <Input
                                             disabled={false}
                                             size="md"
+                                            value={newName}
+                                            onChange={(e) => setNewName(e.target.value)}
                                         />
                                     </FormControl>
                                     <FormControl>
-                                        <FormLabel>Senha:</FormLabel>
+                                        <FormLabel>Nova Senha:</FormLabel>
                                         <Input
                                             disabled={false}
                                             size="md"
                                             type="password"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
                                         />
                                     </FormControl>
                                     <div className='modal-perfil-results-button'>
-                                        <Button className="modal-button-perfil">Atualizar</Button>
+                                        <Button className="modal-button-perfil" onClick={updateUser}>Atualizar</Button>
                                     </div>
                                 </div>
+                                <Button className="modal-button-perfil" onClick={deleteUser}>Deletar</Button>
                             </div>
                         </Rodal>
+                        <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={open}
+                            autoHideDuration={3000} onClose={handleClose}>
+                            <Alert elevation={100000000} onClose={handleClose} severity={severity} sx={{width: '100%'}}>
+                                {message}
+                            </Alert>
+                        </Snackbar>
                         <Rodal
                             visible={visibleLogin}
                             onClose={closeModalLogin}
@@ -561,6 +616,7 @@ function Home() {
                             backgroundPosition: "center",
                             backgroundRepeat: 'no-repeat',
                             backgroundSize: "cover",
+                            cursor: "pointer",
                         }}>
                         </SwiperSlide>
                     ))}

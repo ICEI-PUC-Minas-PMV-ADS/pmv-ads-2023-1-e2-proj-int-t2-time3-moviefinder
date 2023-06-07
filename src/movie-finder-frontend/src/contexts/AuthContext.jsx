@@ -31,6 +31,13 @@ export function AuthProvider({children}) {
         getUserInformation();
     }, []);
 
+    function changeName(nome) {
+        setUserDto({
+            ...userDto, 
+            nome,
+        })
+    }
+
     async function logIn(emailLogin, passwordLogin) {
         const response = await api.post('/movieFinder/login', {
             email: emailLogin,
@@ -60,11 +67,12 @@ export function AuthProvider({children}) {
                 Authorization: `Bearer ${token}`,
             },
         });
+        console.log('pum', response.data);
         setFavorito(response.data);
     }
 
     return (
-        <AuthContext.Provider value={{ authenticated, logIn, logOut, userDto, isFavorite, favorito }}>
+        <AuthContext.Provider value={{ authenticated, logIn, logOut, userDto, isFavorite, favorito, changeName }}>
             {children}
         </AuthContext.Provider>
     )

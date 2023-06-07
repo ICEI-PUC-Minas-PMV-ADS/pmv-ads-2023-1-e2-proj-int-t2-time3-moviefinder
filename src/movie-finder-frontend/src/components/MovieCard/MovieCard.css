@@ -19,6 +19,7 @@
 .movie-card-img {
     display: flex;
     flex-direction: column;
+    cursor: pointer;
 }
 
 .movie-card-img img{

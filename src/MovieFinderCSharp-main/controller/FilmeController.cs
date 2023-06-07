@@ -348,7 +348,37 @@ public class FilmeController : ControllerBase
                 }
             }
         }
-
         return Unauthorized();
+    }
+
+    [HttpPut("alterarInformacoesUsuario")]
+    public async Task<IActionResult> AlterarInformacoesUsuario([FromHeader(Name = "Authorization")] string authorizationHeader,
+    [FromBody] Usuario usuario)
+    {
+        var alterarUsuario = await _usuarioService.AlterarUsuario(usuario);
+        if (alterarUsuario)
+        {
+            return Ok("Usuario alterado com sucesso!");
+        }
+        return BadRequest();
+    }
+    [HttpDelete("deletarUsuario")]
+    public async Task<IActionResult> DeletarUsuario([FromHeader(Name = "Authorization")] string authorizationHeader)
+    {
+        if (authorizationHeader.StartsWith("Bearer "))
+        {
+            var token = authorizationHeader.Substring("Bearer ".Length);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var jwtTokenId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+
+            if (!string.IsNullOrEmpty(jwtTokenId))
+            {
+                await _usuarioService.DeletarUsuario(jwtTokenId);
+                return Ok("Usuario deletado com sucesso!");
+            }
+        }
+        return BadRequest();
     }
 }

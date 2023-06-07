@@ -78,7 +78,7 @@ function Resultado() {
   };
 
   const starFillCheck = (event) =>  {
-    if (!event.type === 'click' && favorito) {
+    if (event.type === 'click' && favorito) {
         setStarFill(true)
     } else if (event.type === 'click' && !favoritoLocal) {
       setFavoritoLocal(favoriteMovie())
