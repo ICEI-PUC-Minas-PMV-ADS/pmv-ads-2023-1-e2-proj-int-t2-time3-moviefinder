@@ -34,7 +34,6 @@ function Home() {
     const [visibleRegister, setvisibleRegister] = useState(false)
     const [visibleFavorites, setvisibleFavorites] = useState(false)
     const [popularMovies, setPopularMovies] = useState([])
-    const [recommendedMovies, setRecommendedMovies] = useState([])
     const [topRatedMovies, setTopRatedMovies] = useState([])
     const [discoverList, setDiscoverList] = useState([])
     const [name, setName] = useState('');
@@ -59,7 +58,7 @@ function Home() {
     const {authenticated} = authContext;
     const token = Cookies.get('moviefinder-token');
     const {favorito} = authContext;
-    const [isSubmitButtonEnabled, setIsSubmitButtonEnabled ] = useState(true);
+    const [isSubmitButtonEnabled, setIsSubmitButtonEnabled] = useState(true);
 
     const showModalFavorites = () => {
         setvisibleFavorites(true);
@@ -207,16 +206,6 @@ function Home() {
         setPopularMovies(response.data)
     }
 
-    const getRecommendedMovies = async () => {
-        const response = await api.get(`/movieFinder/recommendation/list`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-        });
-
-        setRecommendedMovies(response.data)
-    }
-
     const getTopRatedMovies = async () => {
         const response = await api.get('/movieFinder/movie/top_rated')
         setTopRatedMovies(response.data)
@@ -328,7 +317,6 @@ function Home() {
         getPopularMovies()
         getTopRatedMovies()
         getGenreList()
-        getRecommendedMovies()
         window.scrollTo(0, 0)
     }, [])
 
@@ -613,43 +601,6 @@ function Home() {
                                 </SwiperSlide>
                             ))}
                         </Swiper>
-                    </div>
-
-                    <div className='recommendation-movies'>
-                        {authenticated && (
-                            <>
-                                <div className='recommendation-movies-text'>
-                                    <h2>Filmes recomendados</h2>
-                                    <MdKeyboardArrowRight/>
-                                </div>
-                                <Swiper
-                                    loop={true}
-                                    loopPreventsSliding={true}
-                                    navigation={true}
-                                    virtual
-                                    breakpoints={{
-                                        "@0.00": {
-                                            slidesPerView: 1,
-                                        },
-                                        "@0.75": {
-                                            slidesPerView: 3,
-                                        },
-                                        "@1.00": {
-                                            slidesPerView: 4,
-                                        },
-                                        "@1.50": {
-                                            slidesPerView: 8,
-                                        },
-                                    }}
-                                >
-                                    {recommendedMovies?.map((movie) => movie.posterPath &&
-                                        <SwiperSlide onClick={() => gotoDetails(movie)} className="swiper-cards-slide">
-                                            <MovieCard movie={movie} posterSize="200px"/>
-                                        </SwiperSlide>
-                                    )}
-                                </Swiper>
-                            </>
-                        )}
                     </div>
                     {discoverList.map((moviesByGenre) => (
                         <div className='recommendation-movies'>

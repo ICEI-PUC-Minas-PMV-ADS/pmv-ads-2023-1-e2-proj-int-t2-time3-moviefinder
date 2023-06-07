@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Projetos\\Faculdade\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj": {}
+    "C:\\Users\\Juliana Dutra\\Desenvolvimento\\Repositorios\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj": {}
   },
   "projects": {
-    "E:\\Projetos\\Faculdade\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj": {
+    "C:\\Users\\Juliana Dutra\\Desenvolvimento\\Repositorios\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Projetos\\Faculdade\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj",
+        "projectUniqueName": "C:\\Users\\Juliana Dutra\\Desenvolvimento\\Repositorios\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj",
         "projectName": "moviefinder",
-        "projectPath": "E:\\Projetos\\Faculdade\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj",
-        "packagesPath": "C:\\Users\\vinic\\.nuget\\packages\\",
-        "outputPath": "E:\\Projetos\\Faculdade\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\obj\\",
+        "projectPath": "C:\\Users\\Juliana Dutra\\Desenvolvimento\\Repositorios\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\moviefinder.csproj",
+        "packagesPath": "C:\\Users\\Juliana Dutra\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Juliana Dutra\\Desenvolvimento\\Repositorios\\pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder\\src\\MovieFinderCSharp-main\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\vinic\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Juliana Dutra\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

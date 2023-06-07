@@ -101,7 +101,7 @@ function Busca() {
   }
 
   const getRecommendedMovies = async () => {
-    const response = await api.get(`/movieFinder/recommendation/list`, {
+    const response = await api.get(`/movieFinder/recommendationUser/list`, {
       headers: {
         'Authorization': `Bearer ${token}`
       },

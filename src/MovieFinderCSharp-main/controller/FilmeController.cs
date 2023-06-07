@@ -106,8 +106,16 @@ public class FilmeController : ControllerBase
         return Ok(idiomas);
     }
 
-    [HttpGet("recommendation/list")]
-    public async Task<IActionResult> ListRecommendationsByMovie([FromHeader(Name = "Authorization")] string authorizationHeader)
+    [HttpGet("recommendation/list/{id}")]
+    public async Task<IActionResult> ListRecommendationsByMovie(string id)
+    {
+        var response = await _theMovieDataBaseClient.ListRecommendationsByMovie(id, _apiKey, _apiLanguage);
+        var recommendations = JsonConvert.DeserializeObject<RecomendadoDto>(response);
+        return Ok(recommendations);
+    }
+    
+    [HttpGet("recommendationUser/list")]
+    public async Task<IActionResult> RecommendationsMoviesListToUser([FromHeader(Name = "Authorization")] string authorizationHeader)
     {
         if (authorizationHeader.StartsWith("Bearer "))
         {

@@ -7,9 +7,9 @@ import MovieCard from '../../components/MovieCard/MovieCard'
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { GoSearch } from "react-icons/go"
-import { MdKeyboardArrowRight } from "react-icons/md"
+import { MdKeyboardArrowRight } from "react-icons/Md"
 import { BsFillCircleFill } from "react-icons/bs"
-import { MdOutlineFavorite } from "react-icons/md"
+import { MdOutlineFavorite } from "react-icons/Md"
 import { Typography, CircularProgress } from '@mui/material';
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -112,14 +112,8 @@ function Resultado() {
   }
 
   const getRecomendationMovies = async () => {
-    const response = await api.get(`/movieFinder/recommendation/list`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-    });
-
-    setRecomendationMovies(response?.data)
-
+    const response = await api.get(`/movieFinder/recommendation/list/${id}`)
+    setRecomendationMovies(response.data.results)
   }
 
   const theme = createTheme({
@@ -382,7 +376,7 @@ function Resultado() {
         {recomendationMovies?.length > 0 &&
         <div className='recommendation-movies'>
           <div className='recommendation-movies-text'>
-            <h2>Filmes Recomendados</h2>
+            <h2>Filmes recomendados baseados neste filme</h2>
             <MdKeyboardArrowRight />
           </div>
           <Swiper
