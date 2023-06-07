@@ -7,9 +7,9 @@ import MovieCard from '../../components/MovieCard/MovieCard'
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { GoSearch } from "react-icons/go"
-import { MdKeyboardArrowRight } from "react-icons/Md"
+import { MdKeyboardArrowRight } from "react-icons/md"
 import { BsFillCircleFill } from "react-icons/bs"
-import { MdOutlineFavorite } from "react-icons/Md"
+import { MdOutlineFavorite } from "react-icons/md"
 import { Typography, CircularProgress } from '@mui/material';
 import { Swiper, SwiperSlide } from "swiper/react";
 
