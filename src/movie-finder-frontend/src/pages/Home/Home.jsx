@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from "react";
-import {api} from "../../services/api";
+import React, { useEffect, useState } from "react";
+import { api } from "../../services/api";
 
-import {Swiper, SwiperSlide} from "swiper/react";
-import {MdKeyboardArrowRight} from "react-icons/md"
-import {GoSearch} from "react-icons/go"
-import SwiperCore, {Autoplay, Navigation, Pagination, Virtual} from "swiper";
-import {Link, useNavigate} from 'react-router-dom';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { MdKeyboardArrowRight } from "react-icons/md"
+import { GoSearch } from "react-icons/go"
+import SwiperCore, { Autoplay, Navigation, Pagination, Virtual } from "swiper";
+import { Link, useNavigate } from 'react-router-dom';
 import Rodal from 'rodal';
 import Input from '@mui/joy/Input';
 import Button from '@mui/material/Button';
@@ -22,8 +22,8 @@ import 'rodal/lib/rodal.css';
 
 import MovieCard from '../../components/MovieCard/MovieCard';
 import Footer from '../../components/Footer/Footer';
-import {useContext} from "react";
-import {AuthContext} from "../../contexts/AuthContext.jsx";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext.jsx";
 import Cookies from "js-cookie";
 
 SwiperCore.use([Virtual, Navigation, Pagination]);
@@ -54,13 +54,14 @@ function Home() {
     const [message, setMessage] = useState('');
     const [severity, setSeverity] = useState('success');
     const [newName, setNewName] = useState('');
+    const [passwordPerfil, setPasswordPerfil] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const authContext = useContext(AuthContext);
-    const {userDto} = authContext;
-    const {authenticated} = authContext;
+    const { userDto } = authContext;
+    const { authenticated } = authContext;
     const token = Cookies.get('moviefinder-token');
-    const {changeName} = authContext;
-    const [isSubmitButtonEnabled, setIsSubmitButtonEnabled ] = useState(true);
+    const { changeName } = authContext;
+    const [isSubmitButtonEnabled, setIsSubmitButtonEnabled] = useState(true);
 
     const showModalFavorites = () => {
         setNewName(userDto.nome)
@@ -216,7 +217,7 @@ function Home() {
 
     const getGenreList = async () => {
         const response = await api.get('/movieFinder/genre/list')
-        const {genres} = response.data
+        const { genres } = response.data
         const promises = genres.map(async (genre) => {
             const discoverList = await getDiscoverList(genre.id)
             return {
@@ -320,11 +321,11 @@ function Home() {
         const confirmDelete = confirm("tem certeza que deseja deletar sua conta?");
         if (confirmDelete) {
             api.delete('/movieFinder/deletarUsuario',
-            {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-            });
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                });
             authContext.logOut();
             closeModalFavorites()
             setSeverity("success");
@@ -334,301 +335,355 @@ function Home() {
     }
 
     const updateUser = async () => {
-            await api.put('/movieFinder/alterarInformacoesUsuario',
-            {
+        let body = {};
+        let message = '';
+
+        if (!newPassword || !passwordPerfil ) {
+            body = { 
+                nome: newName 
+            }
+            message = "Usuario alterado"
+        } else {
+            body = {
                 nome: newName,
-                id: userDto.id,
+                senhaAtual: passwordPerfil,
                 senha: newPassword,
-                email: userDto.email,
-                genero: userDto.genero,
-                idade: userDto.idade,
-            },
+            }
+            message = "Usuario e senha alterado"
+        }
+
+        await api.put('/movieFinder/alterarInformacoesUsuario',
+            body,
             {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 },
             });
-            closeModalFavorites()
-            setSeverity("success");
-            setMessage("Usuario alterado");
-            setOpen(true)
-            changeName(newName)
-            console.log("fodas", userDto.id);
-        }
+        closeModalFavorites()
+        setSeverity("success");
+        setMessage(message)
+        setOpen(true)
+        changeName(newName)
+    }
 
-    useEffect(() => {
-        getPopularMovies()
-        getTopRatedMovies()
-        getGenreList()
-        window.scrollTo(0, 0)
-    }, [])
 
-    return (
-        <div className="home-body">
+useEffect(() => {
+    getPopularMovies()
+    getTopRatedMovies()
+    getGenreList()
+    window.scrollTo(0, 0)
+}, [])
 
-            <div className='header'>
-                <div className="header-text">
-                    <div className='header-left'>
-                        <Link to="/Busca"><h2><GoSearch style={{color: "rgba(255, 255, 255, 0.849)"}}/>Pesquisar</h2>
-                        </Link>
-                    </div>
-                    <div className='header-center'>
-                        <Link to="/">
-                            <h1>MovieFinder</h1>
-                        </Link>
-                    </div>
-                    <div className='header-right'>
-                        <div>
-                            {userDto !== null ? (
-                                <div style={{display: 'flex'}}>
-                                    <h2 style={{paddingRight: '15px'}} onClick={showModalFavorites}>{userDto.nome}</h2>
-                                    <h2 onClick={logout}>Logout</h2>
-                                </div>
-                            ) : (
-                                <div style={{display: 'flex'}}>
-                                    <h2 onClick={showModalRegister} style={{paddingRight: '15px'}}>Cadastro</h2>
-                                    <h2 onClick={showModalLogin}>Login</h2>
-                                </div>
-                            )}
-                        </div>
-                        <Rodal
-                            visible={visibleFavorites}
-                            onClose={closeModalFavorites}
-                            showMask={true}
-                            closeOnEsc={true}
-                            closeMaskOnClick={true}
-                            showCloseButton={true}
-                            className="rodal-favorites-results"
-                            width={450}
-                            height={450}
-                            customStyles={{
-                                background: 'linear-gradient(45deg, rgba(6,35,64,1) 24%, rgba(6,10,64,1) 49%, rgba(11,4,46,1) 68%)',
-                                borderRadius: '10px',
-                            }}
-                        >
-                            <div className="modal-perfil">
-                                <div>
-                                    <h1>MovieFinder</h1>
-                                </div>
-                                <div className="modal-perfil-results">
-                                    <FormControl>
-                                        <FormLabel>E-mail:</FormLabel>
-                                        <Input
-                                            disabled={true}
-                                            size="md"
-                                            value={userDto?.email}
-                                        />
-                                    </FormControl>
-                                    <FormControl>
-                                        <FormLabel>Nome:</FormLabel>
-                                        <Input
-                                            disabled={false}
-                                            size="md"
-                                            value={newName}
-                                            onChange={(e) => setNewName(e.target.value)}
-                                        />
-                                    </FormControl>
-                                    <FormControl>
-                                        <FormLabel>Nova Senha:</FormLabel>
-                                        <Input
-                                            disabled={false}
-                                            size="md"
-                                            type="password"
-                                            value={newPassword}
-                                            onChange={(e) => setNewPassword(e.target.value)}
-                                        />
-                                    </FormControl>
-                                    <div className='modal-perfil-results-button'>
-                                        <Button className="modal-button-perfil" onClick={updateUser}>Atualizar</Button>
-                                    </div>
-                                </div>
-                                <Button className="modal-button-perfil" onClick={deleteUser}>Deletar</Button>
-                            </div>
-                        </Rodal>
-                        <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={open}
-                            autoHideDuration={3000} onClose={handleClose}>
-                            <Alert elevation={100000000} onClose={handleClose} severity={severity} sx={{width: '100%'}}>
-                                {message}
-                            </Alert>
-                        </Snackbar>
-                        <Rodal
-                            visible={visibleLogin}
-                            onClose={closeModalLogin}
-                            showMask={true}
-                            closeOnEsc={true}
-                            closeMaskOnClick={true}
-                            showCloseButton={true}
-                            className="rodal-login-home"
-                            width={450}
-                            height={500}
-                            customStyles={{
-                                background: 'linear-gradient(45deg, rgba(6,35,64,1) 24%, rgba(6,10,64,1) 49%, rgba(11,4,46,1) 68%)',
-                                borderRadius: '10px',
-                            }}
-                        >
-                            <div className="modal-login-home">
-                                <h1>MovieFinder</h1>
-                                <div className="modal-login-body">
-                                    <div className="modal-login-text">
-                                        <h2>Login</h2>
-                                    </div>
-                                    <div className="modal-login-input-label">
-                                        <Input
-                                            color="neutral"
-                                            value={emailLogin}
-                                            disabled={false}
-                                            size="md"
-                                            onChange={handleEmailLoginChange}
-                                            placeholder="Email..."
+return (
+    <div className="home-body">
 
-                                        />
-                                        <Input
-                                            color="neutral"
-                                            value={passwordLogin}
-                                            disabled={false}
-                                            placeholder="Senha..."
-                                            size="md"
-                                            onChange={handlePasswordLoginChange}
-                                            type="password"
-                                        />
-                                    </div>
-                                    <div className="modal-login-in">
-                                        <p>Esqueceu a senha?</p>
-                                        <Button className="modal-button-login" onClick={handleLogin}>Entrar</Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </Rodal>
-                        <Rodal
-                            visible={visibleRegister}
-                            onClose={closeModalRegister}
-                            showMask={true}
-                            closeOnEsc={true}
-                            closeMaskOnClick={true}
-                            showCloseButton={true}
-                            className="rodal-register-home"
-                            width={450}
-                            height={500}
-                            customStyles={{
-                                background: 'linear-gradient(45deg, rgba(6,35,64,1) 24%, rgba(6,10,64,1) 49%, rgba(11,4,46,1) 68%)',
-                                borderRadius: '10px',
-                            }}
-                        >
-                            <div className="modal-register-home">
-                                <h1>MovieFinder</h1>
-                                <div className="modal-register-input-button">
-                                    <div className="modal-register-text">
-                                        <h2>Cadastro</h2>
-                                    </div>
-                                    <Input
-                                        color={isNameValid ? 'neutral' : 'danger'}
-                                        disabled={false}
-                                        size="md"
-                                        placeholder="Nome Completo..."
-                                        value={name}
-                                        onChange={handleNameChange}
-                                    />
-                                    <Input
-                                        color={isEmailValid ? 'neutral' : 'danger'}
-                                        disabled={false}
-                                        size="md"
-                                        placeholder="E-mail..."
-                                        value={email}
-                                        onChange={handleEmailChange}
-                                    />
-                                    <Input
-                                        color={isPasswordValid ? 'neutral' : 'danger'}
-                                        disabled={false}
-                                        placeholder="Senha... (min 5, máx 8 caracteres)"
-                                        size="md"
-                                        value={password}
-                                        onChange={handlePasswordChange}
-                                        type="password"
-                                    />
-                                    <Input
-                                        color={isPasswordConfirmationValid ? 'neutral' : 'danger'}
-                                        disabled={false}
-                                        placeholder="Confirme sua senha..."
-                                        size="md"
-                                        value={passwordConfirmation}
-                                        type="password"
-                                        onChange={handlePasswordConfirmationChange}
-                                    />
-
-                                    <select
-                                        value={genre}
-                                        className={`modal-register-select ${isGenreValid ? '' : 'invalid'}`}
-                                        onChange={handleGenreChange}
-                                    >
-                                        <option value="">
-                                            Selecione o gênero...
-                                        </option>
-                                        <option value="Masculino">Masculino</option>
-                                        <option value="Feminino">Feminino</option>
-                                    </select>
-                                    <Input
-                                        color={isAgeValid ? 'neutral' : 'danger'}
-                                        type="number"
-                                        disabled={false}
-                                        placeholder="Digite sua idade..."
-                                        size="md"
-                                        value={age}
-                                        onChange={handleAgeChange}
-                                    />
-                                    <p>Crie sua conta agora no MovieFinder</p>
-                                    <Button
-                                        disabled={!isSubmitButtonEnabled}
-                                        className="modal-register-button"
-                                        onClick={handleSubmit}
-                                    >
-                                        Cadastrar
-                                    </Button>
-                                </div>
-                            </div>
-                        </Rodal>
-                        <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={open}
-                                  autoHideDuration={3000} onClose={handleClose}>
-                            <Alert elevation={100000000} onClose={handleClose} severity={severity} sx={{width: '100%'}}>
-                                {message}
-                            </Alert>
-                        </Snackbar>
-                    </div>
+        <div className='header'>
+            <div className="header-text">
+                <div className='header-left'>
+                    <Link to="/Busca"><h2><GoSearch style={{ color: "rgba(255, 255, 255, 0.849)" }} />Pesquisar</h2>
+                    </Link>
                 </div>
+                <div className='header-center'>
+                    <Link to="/">
+                        <h1>MovieFinder</h1>
+                    </Link>
+                </div>
+                <div className='header-right'>
+                    <div>
+                        {userDto !== null ? (
+                            <div style={{ display: 'flex' }}>
+                                <h2 style={{ paddingRight: '15px' }} onClick={showModalFavorites}>{userDto.nome}</h2>
+                                <h2 onClick={logout}>Logout</h2>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'flex' }}>
+                                <h2 onClick={showModalRegister} style={{ paddingRight: '15px' }}>Cadastro</h2>
+                                <h2 onClick={showModalLogin}>Login</h2>
+                            </div>
+                        )}
+                    </div>
+                    <Rodal
+                        visible={visibleFavorites}
+                        onClose={closeModalFavorites}
+                        showMask={true}
+                        closeOnEsc={true}
+                        closeMaskOnClick={true}
+                        showCloseButton={true}
+                        className="rodal-favorites-results"
+                        width={450}
+                        height={450}
+                        customStyles={{
+                            background: 'linear-gradient(45deg, rgba(6,35,64,1) 24%, rgba(6,10,64,1) 49%, rgba(11,4,46,1) 68%)',
+                            borderRadius: '10px',
+                        }}
+                    >
+                        <div className="modal-perfil">
+                            <div>
+                                <h1>MovieFinder</h1>
+                            </div>
+                            <div className="modal-perfil-results">
+                                <FormControl>
+                                    <FormLabel>E-mail:</FormLabel>
+                                    <Input
+                                        disabled={true}
+                                        size="md"
+                                        value={userDto?.email}
+                                    />
+                                </FormControl>
+                                <FormControl>
+                                    <FormLabel>Nome:</FormLabel>
+                                    <Input
+                                        disabled={false}
+                                        size="md"
+                                        value={newName}
+                                        onChange={(e) => setNewName(e.target.value)}
+                                    />
+                                </FormControl>
+                                <FormControl>
+                                    <FormLabel>Senha Atual:</FormLabel>
+                                    <Input
+                                        disabled={false}
+                                        size="md"
+                                        type="password"
+                                        value={passwordPerfil}
+                                        onChange={(e) => setPasswordPerfil(e.target.value)}
+                                    />
+                                </FormControl>
+                                <FormControl>
+                                    <FormLabel>Nova Senha:</FormLabel>
+                                    <Input
+                                        disabled={false}
+                                        size="md"
+                                        type="password"
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                    />
+                                </FormControl>
+                                <div className='modal-perfil-results-button'>
+                                    <Button className="modal-button-perfil" onClick={updateUser}>Atualizar</Button>
+                                </div>
+                            </div>
+                            <Button className="modal-button-perfil" onClick={deleteUser}>Deletar</Button>
+                        </div>
+                    </Rodal>
+                    <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={open}
+                        autoHideDuration={3000} onClose={handleClose}>
+                        <Alert elevation={100000000} onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+                            {message}
+                        </Alert>
+                    </Snackbar>
+                    <Rodal
+                        visible={visibleLogin}
+                        onClose={closeModalLogin}
+                        showMask={true}
+                        closeOnEsc={true}
+                        closeMaskOnClick={true}
+                        showCloseButton={true}
+                        className="rodal-login-home"
+                        width={450}
+                        height={500}
+                        customStyles={{
+                            background: 'linear-gradient(45deg, rgba(6,35,64,1) 24%, rgba(6,10,64,1) 49%, rgba(11,4,46,1) 68%)',
+                            borderRadius: '10px',
+                        }}
+                    >
+                        <div className="modal-login-home">
+                            <h1>MovieFinder</h1>
+                            <div className="modal-login-body">
+                                <div className="modal-login-text">
+                                    <h2>Login</h2>
+                                </div>
+                                <div className="modal-login-input-label">
+                                    <Input
+                                        color="neutral"
+                                        value={emailLogin}
+                                        disabled={false}
+                                        size="md"
+                                        onChange={handleEmailLoginChange}
+                                        placeholder="Email..."
 
-                <Swiper
-                    spaceBetween={30}
-                    centeredSlides={true}
-                    autoplay={{
-                        delay: 2500,
-                        disableOnInteraction: false,
-                    }}
-                    pagination={{
-                        clickable: true,
-                    }}
-                    navigation={true}
-                    modules={[Autoplay, Pagination, Navigation]}
-                    className="swiper-home-header"
-                >
-                    {popularMovies.map((movie) => (
-                        <SwiperSlide onClick={() => gotoDetails(movie)} className="swiper-header-img" style={{
-                            height: "850px",
-                            backgroundImage: `url(${"http://image.tmdb.org/t/p/original" + movie.backdropPath})`,
-                            backgroundPosition: "center",
-                            backgroundRepeat: 'no-repeat',
-                            backgroundSize: "cover",
-                            cursor: "pointer",
-                        }}>
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
+                                    />
+                                    <Input
+                                        color="neutral"
+                                        value={passwordLogin}
+                                        disabled={false}
+                                        placeholder="Senha..."
+                                        size="md"
+                                        onChange={handlePasswordLoginChange}
+                                        type="password"
+                                    />
+                                </div>
+                                <div className="modal-login-in">
+                                    <p>Esqueceu a senha?</p>
+                                    <Button className="modal-button-login" onClick={handleLogin}>Entrar</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </Rodal>
+                    <Rodal
+                        visible={visibleRegister}
+                        onClose={closeModalRegister}
+                        showMask={true}
+                        closeOnEsc={true}
+                        closeMaskOnClick={true}
+                        showCloseButton={true}
+                        className="rodal-register-home"
+                        width={450}
+                        height={500}
+                        customStyles={{
+                            background: 'linear-gradient(45deg, rgba(6,35,64,1) 24%, rgba(6,10,64,1) 49%, rgba(11,4,46,1) 68%)',
+                            borderRadius: '10px',
+                        }}
+                    >
+                        <div className="modal-register-home">
+                            <h1>MovieFinder</h1>
+                            <div className="modal-register-input-button">
+                                <div className="modal-register-text">
+                                    <h2>Cadastro</h2>
+                                </div>
+                                <Input
+                                    color={isNameValid ? 'neutral' : 'danger'}
+                                    disabled={false}
+                                    size="md"
+                                    placeholder="Nome Completo..."
+                                    value={name}
+                                    onChange={handleNameChange}
+                                />
+                                <Input
+                                    color={isEmailValid ? 'neutral' : 'danger'}
+                                    disabled={false}
+                                    size="md"
+                                    placeholder="E-mail..."
+                                    value={email}
+                                    onChange={handleEmailChange}
+                                />
+                                <Input
+                                    color={isPasswordValid ? 'neutral' : 'danger'}
+                                    disabled={false}
+                                    placeholder="Senha... (min 5, máx 8 caracteres)"
+                                    size="md"
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                    type="password"
+                                />
+                                <Input
+                                    color={isPasswordConfirmationValid ? 'neutral' : 'danger'}
+                                    disabled={false}
+                                    placeholder="Confirme sua senha..."
+                                    size="md"
+                                    value={passwordConfirmation}
+                                    type="password"
+                                    onChange={handlePasswordConfirmationChange}
+                                />
+
+                                <select
+                                    value={genre}
+                                    className={`modal-register-select ${isGenreValid ? '' : 'invalid'}`}
+                                    onChange={handleGenreChange}
+                                >
+                                    <option value="">
+                                        Selecione o gênero...
+                                    </option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Feminino">Feminino</option>
+                                </select>
+                                <Input
+                                    color={isAgeValid ? 'neutral' : 'danger'}
+                                    type="number"
+                                    disabled={false}
+                                    placeholder="Digite sua idade..."
+                                    size="md"
+                                    value={age}
+                                    onChange={handleAgeChange}
+                                />
+                                <p>Crie sua conta agora no MovieFinder</p>
+                                <Button
+                                    disabled={!isSubmitButtonEnabled}
+                                    className="modal-register-button"
+                                    onClick={handleSubmit}
+                                >
+                                    Cadastrar
+                                </Button>
+                            </div>
+                        </div>
+                    </Rodal>
+                    <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={open}
+                        autoHideDuration={3000} onClose={handleClose}>
+                        <Alert elevation={100000000} onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+                            {message}
+                        </Alert>
+                    </Snackbar>
+                </div>
             </div>
 
-            <div className="content-home-body">
-                <div className="content-home">
+            <Swiper
+                spaceBetween={30}
+                centeredSlides={true}
+                autoplay={{
+                    delay: 2500,
+                    disableOnInteraction: false,
+                }}
+                pagination={{
+                    clickable: true,
+                }}
+                navigation={true}
+                modules={[Autoplay, Pagination, Navigation]}
+                className="swiper-home-header"
+            >
+                {popularMovies.map((movie) => (
+                    <SwiperSlide onClick={() => gotoDetails(movie)} className="swiper-header-img" style={{
+                        height: "850px",
+                        backgroundImage: `url(${"http://image.tmdb.org/t/p/original" + movie.backdropPath})`,
+                        backgroundPosition: "center",
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: "cover",
+                        cursor: "pointer",
+                    }}>
+                    </SwiperSlide>
+                ))}
+            </Swiper>
+        </div>
+
+        <div className="content-home-body">
+            <div className="content-home">
+                <div className='recommendation-movies'>
+                    <div className='recommendation-movies-text'>
+                        <h2>Filmes com melhores avaliações</h2>
+                        <MdKeyboardArrowRight />
+                    </div>
+                    <Swiper
+                        loop={true}
+                        loopPreventsSliding={true}
+                        navigation={true}
+                        virtual
+                        breakpoints={{
+                            "@0.00": {
+                                slidesPerView: 1,
+                            },
+                            "@0.75": {
+                                slidesPerView: 3,
+                            },
+                            "@1.00": {
+                                slidesPerView: 4,
+                            },
+                            "@1.50": {
+                                slidesPerView: 8,
+                            },
+                        }}
+                    >
+                        {topRatedMovies.map((movie, index) => movie.posterPath && (
+                            <SwiperSlide onClick={() => gotoDetails(movie)} className="swiper-cards-slide"
+                                key={movie} virtualIndex={index}>
+                                <MovieCard movie={movie} posterSize="200px" />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </div>
+                {discoverList.map((moviesByGenre) => (
                     <div className='recommendation-movies'>
                         <div className='recommendation-movies-text'>
-                            <h2>Filmes com melhores avaliações</h2>
-                            <MdKeyboardArrowRight/>
+                            <h2>Filmes de {moviesByGenre.genreName}</h2>
+                            <MdKeyboardArrowRight />
                         </div>
                         <Swiper
                             loop={true}
@@ -650,53 +705,19 @@ function Home() {
                                 },
                             }}
                         >
-                            {topRatedMovies.map((movie, index) => movie.posterPath && (
-                                <SwiperSlide onClick={() => gotoDetails(movie)} className="swiper-cards-slide"
-                                             key={movie} virtualIndex={index}>
-                                    <MovieCard movie={movie} posterSize="200px"/>
+                            {moviesByGenre.movies.map((movie) => movie.posterPath &&
+                                <SwiperSlide onClick={() => gotoDetails(movie)} className="swiper-cards-slide">
+                                    <MovieCard movie={movie} posterSize="200px" />
                                 </SwiperSlide>
-                            ))}
+                            )}
                         </Swiper>
                     </div>
-                    {discoverList.map((moviesByGenre) => (
-                        <div className='recommendation-movies'>
-                            <div className='recommendation-movies-text'>
-                                <h2>Filmes de {moviesByGenre.genreName}</h2>
-                                <MdKeyboardArrowRight/>
-                            </div>
-                            <Swiper
-                                loop={true}
-                                loopPreventsSliding={true}
-                                navigation={true}
-                                virtual
-                                breakpoints={{
-                                    "@0.00": {
-                                        slidesPerView: 1,
-                                    },
-                                    "@0.75": {
-                                        slidesPerView: 3,
-                                    },
-                                    "@1.00": {
-                                        slidesPerView: 4,
-                                    },
-                                    "@1.50": {
-                                        slidesPerView: 8,
-                                    },
-                                }}
-                            >
-                                {moviesByGenre.movies.map((movie) => movie.posterPath &&
-                                    <SwiperSlide onClick={() => gotoDetails(movie)} className="swiper-cards-slide">
-                                        <MovieCard movie={movie} posterSize="200px"/>
-                                    </SwiperSlide>
-                                )}
-                            </Swiper>
-                        </div>
-                    ))}
-                </div>
-                <Footer/>
+                ))}
             </div>
+            <Footer />
         </div>
-    )
+    </div>
+)
 }
 
 export default Home

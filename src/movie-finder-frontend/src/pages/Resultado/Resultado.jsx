@@ -36,12 +36,18 @@ function Resultado() {
   const [recomendationMovies, setRecomendationMovies ] = useState([])
   const [movie, setMovie ] = useState({})
   const [discoverList, setDiscoverList ] = useState([])
+  const [newName, setNewName] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [favoritoLocal, setFavoritoLocal] = useState(favorito);
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = useState('');
+  const [severity, setSeverity] = useState('success');
   const authContext = useContext(AuthContext);
   const {authenticated} = authContext;
   const token = Cookies.get('moviefinder-token');
   const {userDto} = authContext;
+  const {changeName} = authContext;
   const {favorito} = authContext;
-  const [favoritoLocal, setFavoritoLocal] = useState(favorito);
 
   const navigate = useNavigate()
 
@@ -127,6 +133,44 @@ function Resultado() {
     },
   });
 
+  const deleteUser = async () => {
+    const confirmDelete = confirm("tem certeza que deseja deletar sua conta?");
+    if (confirmDelete) {
+        api.delete('/movieFinder/deletarUsuario',
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        authContext.logOut();
+        closeModalFavorites()
+        setSeverity("success");
+        setMessage("Usuario deletado");
+        setOpen(true)
+    }
+}
+
+const updateUser = async () => {
+        await api.put('/movieFinder/alterarInformacoesUsuario',
+        {
+            nome: newName,
+            id: userDto.id,
+            senha: newPassword,
+            email: userDto.email,
+            genero: userDto.genero,
+            idade: userDto.idade,
+        },
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+        });
+        closeModalFavorites()
+        setSeverity("success");
+        setMessage("Usuario alterado");
+        setOpen(true)
+        changeName(newName)
+    }
 
   useEffect(() => {
     getRecomendationMovies()
@@ -161,53 +205,63 @@ function Resultado() {
             </h2>)}
 
             <Rodal
-                visible={visibleFavorites}
-                onClose={closeModalFavorites}
-                showMask={true}
-                closeOnEsc={true}
-                closeMaskOnClick={true}
-                showCloseButton={true}
-                className="rodal-favorites-results"
-                width={450}
-                height={450}
-                customStyles={{
+              visible={visibleFavorites}
+              onClose={closeModalFavorites}
+              showMask={true}
+              closeOnEsc={true}
+              closeMaskOnClick={true}
+              showCloseButton={true}
+              className="rodal-favorites-results"
+              width={450}
+              height={450}
+              customStyles={{
                   background: 'linear-gradient(45deg, rgba(6,35,64,1) 24%, rgba(6,10,64,1) 49%, rgba(11,4,46,1) 68%)',
                   borderRadius: '10px',
-                }}
-              >
-                <div className="modal-perfil">
-                  <div>
-                    <h1>MovieFinder</h1>
-                  </div>
+              }}
+            >
+              <div className="modal-perfil">
+                  <div><h1>MovieFinder</h1></div>
                   <div className="modal-perfil-results">
-                    <FormControl>
-                      <FormLabel>E-mail:</FormLabel>
-                      <Input
-                        disabled={false}
-                        size="md"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>Nome:</FormLabel>
-                      <Input
-                        disabled={false}
-                        size="md"
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>Senha:</FormLabel>
-                      <Input
-                        disabled={false}
-                        size="md"
-                        type="password"
-                      />
-                    </FormControl>
-                    <div className='modal-perfil-results-button'>
-                      <Button className="modal-button-perfil" >Atualizar</Button>
-                    </div>
+                      <FormControl>
+                          <FormLabel>E-mail:</FormLabel>
+                          <Input
+                              disabled={true}
+                              size="md"
+                              value={userDto?.email}
+                          />
+                      </FormControl>
+                      <FormControl>
+                          <FormLabel>Nome:</FormLabel>
+                          <Input
+                              disabled={false}
+                              size="md"
+                              value={newName}
+                              onChange={(e) => setNewName(e.target.value)}
+                          />
+                      </FormControl>
+                      <FormControl>
+                          <FormLabel>Nova Senha:</FormLabel>
+                          <Input
+                              disabled={false}
+                              size="md"
+                              type="password"
+                              value={newPassword}
+                              onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                      </FormControl>
+                      <div className='modal-perfil-results-button'>
+                          <Button className="modal-button-perfil" onClick={updateUser}>Atualizar</Button>
+                      </div>
                   </div>
-                </div>
-              </Rodal>
+                  <Button className="modal-button-perfil" onClick={deleteUser}>Deletar</Button>
+              </div>
+            </Rodal>
+            <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={open}
+                autoHideDuration={3000} onClose={handleClose}>
+                <Alert elevation={100000000} onClose={handleClose} severity={severity} sx={{width: '100%'}}>
+                    {message}
+                </Alert>
+            </Snackbar>
           </div>
         </div>
         <div className='results-movie-details'>

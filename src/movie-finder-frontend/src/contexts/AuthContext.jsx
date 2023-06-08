@@ -67,7 +67,6 @@ export function AuthProvider({children}) {
                 Authorization: `Bearer ${token}`,
             },
         });
-        console.log('pum', response.data);
         setFavorito(response.data);
     }
 

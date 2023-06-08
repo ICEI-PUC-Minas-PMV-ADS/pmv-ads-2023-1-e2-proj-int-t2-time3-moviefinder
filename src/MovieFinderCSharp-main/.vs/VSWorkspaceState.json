@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
+    "\\client",
     "\\Entities"
   ],
-  "SelectedNode": "\\Entities\\Ator.cs",
+  "SelectedNode": "\\client\\TheMovieDataBaseClient.cs",
   "PreviewInSolutionExplorer": false
 }
