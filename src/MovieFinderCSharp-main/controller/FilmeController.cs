@@ -353,15 +353,45 @@ public class FilmeController : ControllerBase
 
     [HttpPut("alterarInformacoesUsuario")]
     public async Task<IActionResult> AlterarInformacoesUsuario([FromHeader(Name = "Authorization")] string authorizationHeader,
-    [FromBody] Usuario usuario)
+    [FromBody] RedefinicaoSenha redefinicao)
     {
-        var alterarUsuario = await _usuarioService.AlterarUsuario(usuario);
-        if (alterarUsuario)
+        if (authorizationHeader.StartsWith("Bearer "))
         {
-            return Ok("Usuario alterado com sucesso!");
+            var token = authorizationHeader.Substring("Bearer ".Length);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var usuarioDb = await _usuarioService.BuscarUsuario(userId);
+                
+                if (redefinicao.Senha != null)
+                {
+                    var isSenhaCorreta = BCrypt.Net.BCrypt.Verify(redefinicao.Senha, usuarioDb.Senha);
+                    if (!isSenhaCorreta)
+                    {
+                        var responseErro = new
+                        {
+                            Message = "Credenciais inválidas!",
+                            Data = usuarioDb.Email
+                        };
+                        return Unauthorized(responseErro);
+                    }
+                }
+
+                var atualizarUsuario = await _usuarioService.AtualizarUsuario(usuarioDb, redefinicao);
+                if (atualizarUsuario)
+                {
+                    return Ok("Usuario alterado com sucesso!");
+                }
+                return BadRequest();
+            }
         }
-        return BadRequest();
+        return Unauthorized("Credenciais inválidas");
     }
+    
     [HttpDelete("deletarUsuario")]
     public async Task<IActionResult> DeletarUsuario([FromHeader(Name = "Authorization")] string authorizationHeader)
     {

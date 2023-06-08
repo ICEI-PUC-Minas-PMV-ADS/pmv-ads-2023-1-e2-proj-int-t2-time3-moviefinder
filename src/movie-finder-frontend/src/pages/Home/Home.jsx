@@ -25,6 +25,8 @@ import Footer from '../../components/Footer/Footer';
 import {useContext} from "react";
 import {AuthContext} from "../../contexts/AuthContext.jsx";
 import Cookies from "js-cookie";
+import {FormControlLabel} from "@mui/material";
+import {Checkbox} from "@mui/joy";
 
 SwiperCore.use([Virtual, Navigation, Pagination]);
 
@@ -41,6 +43,8 @@ function Home() {
     const [email, setEmail] = useState('');
     const [isEmailValid, setIsEmailValid] = useState(true);
     const [emailLogin, setEmailLogin] = useState('');
+    const [emailPerfil, setEmailPerfil] = useState('');
+    const [isEmailPerfilValid, setEmailPerfilValid] = useState(true);
     const [password, setPassword] = useState('');
     const [isPasswordValid, setIsPasswordValid] = useState(true);
     const [passwordLogin, setPasswordLogin] = useState('');
@@ -54,13 +58,18 @@ function Home() {
     const [message, setMessage] = useState('');
     const [severity, setSeverity] = useState('success');
     const [newName, setNewName] = useState('');
+    const [isNewNameValid, setNewNameValid] = useState(true);
+    const [actualPassword, setActualPassword] = useState('');
+    const [isActualPasswordValid, setActualPasswordValid] = useState(true);
     const [newPassword, setNewPassword] = useState('');
+    const [isNewPasswordValid, setIsNewPasswordValid] = useState(true);
     const authContext = useContext(AuthContext);
     const {userDto} = authContext;
     const {authenticated} = authContext;
     const token = Cookies.get('moviefinder-token');
     const {changeName} = authContext;
-    const [isSubmitButtonEnabled, setIsSubmitButtonEnabled ] = useState(true);
+    const [isSubmitButtonEnabled, setIsSubmitButtonEnabled] = useState(true);
+    const [checked, setChecked] = useState(false);
 
     const showModalFavorites = () => {
         setNewName(userDto.nome)
@@ -68,6 +77,13 @@ function Home() {
     }
     const closeModalFavorites = () => {
         setvisibleFavorites(false);
+        setChecked(false);
+        setNewNameValid(true);
+        setNewName('')
+        setActualPasswordValid(true);
+        setActualPassword('');
+        setIsNewPasswordValid(true);
+        setNewPassword('');
     }
 
     const navigate = useNavigate()
@@ -320,11 +336,11 @@ function Home() {
         const confirmDelete = confirm("tem certeza que deseja deletar sua conta?");
         if (confirmDelete) {
             api.delete('/movieFinder/deletarUsuario',
-            {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-            });
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                });
             authContext.logOut();
             closeModalFavorites()
             setSeverity("success");
@@ -333,28 +349,94 @@ function Home() {
         }
     }
 
-    const updateUser = async () => {
-            await api.put('/movieFinder/alterarInformacoesUsuario',
-            {
-                nome: newName,
-                id: userDto.id,
-                senha: newPassword,
-                email: userDto.email,
-                genero: userDto.genero,
-                idade: userDto.idade,
-            },
-            {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-            });
-            closeModalFavorites()
-            setSeverity("success");
-            setMessage("Usuario alterado");
-            setOpen(true)
-            changeName(newName)
-            console.log("fodas", userDto.id);
+    const handleNomePerfilChange = e => {
+        const newName = e.target.value;
+        if (newName !== '') {
+            setNewNameValid(true);
+            setNewName(newName);
+        } else {
+            setNewNameValid(false);
+            setNewName('');
         }
+
+    }
+
+    const handleCheckBoxChange = e => {
+        setChecked(e.target.checked);
+    };
+
+    const handleActualPasswordChange = e => {
+        const actualPassword = e.target.value;
+        if (actualPassword !== '') {
+            setActualPasswordValid(true);
+            setActualPassword(actualPassword);
+        } else {
+            setActualPasswordValid(false);
+            setActualPassword('');
+        }
+    }
+
+    const handleNewPasswordChange = e => {
+        const newPassword = e.target.value;
+        if (newPassword !== '') {
+            setIsNewPasswordValid(true);
+            setActualPassword(newPassword);
+        } else {
+            setIsNewPasswordValid(false);
+            setActualPassword('');
+        }
+    }
+
+    const updateUser = async () => {
+        try {
+            if ((checked && newName !== '' && actualPassword !== '' && (newPassword !== '' && newPassword.length > 5)) || (!checked && newName !== '')) {
+                await api.put('/movieFinder/alterarInformacoesUsuario',
+                    checked ? {
+                        nome: newName,
+                        senha: actualPassword,
+                        novaSenha: newPassword
+                    } : {
+                        nome: newName,
+                    },
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                    });
+                closeModalFavorites()
+                setSeverity("success");
+                setMessage("Usuario alterado");
+                setOpen(true)
+                changeName(newName)
+            } else {
+                if (newName === '') {
+                    setNewNameValid(false);
+                } else {
+                    setNewNameValid(true);
+                }
+                if (checked && actualPassword === '') {
+                    setActualPasswordValid(false);
+                    console.log(isActualPasswordValid);
+                } else {
+                    setActualPasswordValid(true);
+                }
+                if (checked && newPassword === '' || newPassword.length < 6) {
+                    setIsNewPasswordValid(false);
+                } else {
+                    setIsNewPasswordValid(true);
+                }
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setSeverity("error");
+                setMessage(error.response.data.message);
+                setOpen(true);
+                console.error(error.response.data.message);
+            } else {
+                console.error(error);
+            }
+        }
+    }
 
     useEffect(() => {
         getPopularMovies()
@@ -369,7 +451,8 @@ function Home() {
             <div className='header'>
                 <div className="header-text">
                     <div className='header-left'>
-                        <Link to="/Busca"><h2><GoSearch style={{color: "rgba(255, 255, 255, 0.849)"}}/>Pesquisar</h2>
+                        <Link to="/Busca"><h2><GoSearch style={{color: "rgba(255, 255, 255, 0.849)"}}/>Pesquisar
+                        </h2>
                         </Link>
                     </div>
                     <div className='header-center'>
@@ -381,7 +464,8 @@ function Home() {
                         <div>
                             {userDto !== null ? (
                                 <div style={{display: 'flex'}}>
-                                    <h2 style={{paddingRight: '15px'}} onClick={showModalFavorites}>{userDto.nome}</h2>
+                                    <h2 style={{paddingRight: '15px'}}
+                                        onClick={showModalFavorites}>{userDto.nome}</h2>
                                     <h2 onClick={logout}>Logout</h2>
                                 </div>
                             ) : (
@@ -422,32 +506,59 @@ function Home() {
                                     <FormControl>
                                         <FormLabel>Nome:</FormLabel>
                                         <Input
+                                            color={isNewNameValid ? 'neutral' : 'danger'}
                                             disabled={false}
                                             size="md"
                                             value={newName}
-                                            onChange={(e) => setNewName(e.target.value)}
+                                            placeholder={userDto?.nome}
+                                            onChange={handleNomePerfilChange}
+                                        />
+                                    </FormControl>
+                                    <FormControlLabel
+                                        style={{marginTop: '10px'}}
+                                        control={<Checkbox
+                                            style={{marginRight: '5px'}}
+                                            checked={checked}
+                                            onChange={handleCheckBoxChange}
+                                            inputProps={{'aria-label': 'controlled'}}
+                                            sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}
+                                        />} label="Redefinir Senha?"/>
+                                    <FormControl>
+                                        <FormLabel>Senha Atual:</FormLabel>
+                                        <Input
+                                            color={isActualPasswordValid ? 'neutral' : 'danger'}
+                                            disabled={!checked}
+                                            size="md"
+                                            type="password"
+                                            placeholder="Senha atual..."
+                                            value={actualPassword}
+                                            onChange={handleActualPasswordChange}
                                         />
                                     </FormControl>
                                     <FormControl>
                                         <FormLabel>Nova Senha:</FormLabel>
                                         <Input
-                                            disabled={false}
+                                            color={isNewPasswordValid ? 'neutral' : 'danger'}
+                                            disabled={!checked}
                                             size="md"
                                             type="password"
+                                            placeholder="Nova Senha..."
                                             value={newPassword}
-                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            onChange={handleNewPasswordChange}
                                         />
                                     </FormControl>
                                     <div className='modal-perfil-results-button'>
-                                        <Button className="modal-button-perfil" onClick={updateUser}>Atualizar</Button>
+                                        <Button className="modal-button-perfil"
+                                                onClick={updateUser}>Atualizar</Button>
                                     </div>
                                 </div>
                                 <Button className="modal-button-perfil" onClick={deleteUser}>Deletar</Button>
                             </div>
                         </Rodal>
                         <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={open}
-                            autoHideDuration={3000} onClose={handleClose}>
-                            <Alert elevation={100000000} onClose={handleClose} severity={severity} sx={{width: '100%'}}>
+                                  autoHideDuration={3000} onClose={handleClose}>
+                            <Alert elevation={100000000} onClose={handleClose} severity={severity}
+                                   sx={{width: '100%'}}>
                                 {message}
                             </Alert>
                         </Snackbar>
@@ -588,7 +699,8 @@ function Home() {
                         </Rodal>
                         <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={open}
                                   autoHideDuration={3000} onClose={handleClose}>
-                            <Alert elevation={100000000} onClose={handleClose} severity={severity} sx={{width: '100%'}}>
+                            <Alert elevation={100000000} onClose={handleClose} severity={severity}
+                                   sx={{width: '100%'}}>
                                 {message}
                             </Alert>
                         </Snackbar>

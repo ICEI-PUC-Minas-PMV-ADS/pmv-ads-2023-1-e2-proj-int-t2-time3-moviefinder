@@ -58,7 +58,7 @@ public class UsuarioService
         var usuario = await _context.Usuarios.SingleOrDefaultAsync(u => u.Id == int.Parse(userId));
         var usuarioAuthDto = new UsuarioAuthDto();
         if (usuario != null)
-        
+
         {
             usuarioAuthDto.Nome = usuario.Nome;
             usuarioAuthDto.Email = usuario.Email;
@@ -69,6 +69,7 @@ public class UsuarioService
 
         return usuarioAuthDto;
     }
+
     public async Task<bool> DeletarUsuario(string userId)
     {
         try
@@ -84,12 +85,31 @@ public class UsuarioService
             throw;
         }
     }
-    public async Task<bool> AlterarUsuario(Usuario usuario)
+
+    public async Task<Usuario?> BuscarUsuario(string userId)
     {
         try
         {
-            usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
-            _context.Update(usuario);
+            var usuarioDb = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+            return usuarioDb;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Ocorreu um erro: {e.Message}");
+            throw;
+        }
+    }
+
+    public async Task<bool> AtualizarUsuario(Usuario usuarioDb, RedefinicaoSenha redefinicaoSenha)
+    {
+        try
+        {
+            usuarioDb.Nome = redefinicaoSenha.Nome;
+            if (redefinicaoSenha.Senha != null && redefinicaoSenha.NovaSenha != null)
+            {
+                usuarioDb.Senha = BCrypt.Net.BCrypt.HashPassword(redefinicaoSenha.NovaSenha);
+            }
+            _context.Update(usuarioDb);
             await _context.SaveChangesAsync();
             return true;
         }
