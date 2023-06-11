@@ -363,7 +363,7 @@ function Home() {
 
     const handleCheckBoxChange = e => {
         setChecked(e.target.checked);
-    };
+    }
 
     const handleActualPasswordChange = e => {
         const actualPassword = e.target.value;

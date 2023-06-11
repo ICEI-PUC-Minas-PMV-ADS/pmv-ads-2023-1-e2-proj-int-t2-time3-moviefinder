@@ -133,9 +133,9 @@ public class FilmeController : ControllerBase
         return Unauthorized();
     }
 
-    [HttpPost("favoritarFilme")]
+    [HttpGet("favoritarFilme/{movieId}")]
     public async Task<IActionResult> FavoritarFilme([FromHeader(Name = "Authorization")] string authorizationHeader,
-        [FromBody] FilmeDto filmeDto)
+        string movieId)
     {
         if (authorizationHeader.StartsWith("Bearer "))
         {
@@ -147,6 +147,8 @@ public class FilmeController : ControllerBase
 
             if (!string.IsNullOrEmpty(userId))
             {
+                var movieById = await _theMovieDataBaseClient.FindMovieById(movieId, _apiKey, _apiLanguage);
+                var filmeDto = JsonConvert.DeserializeObject<FilmeDto>(movieById);
                 var filmeFavoritado = await _filmeService.FavoritarFilme(userId, filmeDto);
 
                 if (filmeFavoritado)

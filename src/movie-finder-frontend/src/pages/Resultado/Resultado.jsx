@@ -13,6 +13,7 @@ import { MdOutlineFavorite } from "react-icons/md"
 import { Typography, CircularProgress } from '@mui/material';
 import { Swiper, SwiperSlide } from "swiper/react";
 
+
 import Box from '@mui/material/Box';
 import Rodal from 'rodal';
 import moment from 'moment/moment';
@@ -26,13 +27,12 @@ import "swiper/css/scrollbar";
 import './Resultado.css'
 import {AuthContext} from "../../contexts/AuthContext.jsx";
 import Cookies from 'js-cookie';
-import Home from "../Home/Home.jsx";
 
 function Resultado() {
 
   const { id } = useParams()
   const [visibleFavorites, setvisibleFavorites] = useState(false)
-  const [starFill, setStarFill] = useState(false)
+  // const [starFill, setStarFill] = useState(false)
   const [recomendationMovies, setRecomendationMovies ] = useState([])
   const [movie, setMovie ] = useState({})
   const [discoverList, setDiscoverList ] = useState([])
@@ -41,7 +41,7 @@ function Resultado() {
   const token = Cookies.get('moviefinder-token');
   const {userDto} = authContext;
   const {favorito} = authContext;
-  const [favoritoLocal, setFavoritoLocal] = useState(favorito);
+  const {starfill} = authContext;
 
   const navigate = useNavigate()
 
@@ -57,35 +57,11 @@ function Resultado() {
   const showModalFavorites = () => { setvisibleFavorites(true);}
   const closeModalFavorites = () => {setvisibleFavorites(false);}
 
-  const favoriteMovie  = async () => {
-    const response = await api.post('/movieFinder/favoritarFilme', movie, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    return setFavoritoLocal(response.data);
-  };
-
-  const unfavoriteMovie  = async () => {
-    const response = await api.get(`/movieFinder/desfavoritarFilme/${movie.id}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    return setFavoritoLocal(response.data);
-  };
-
-  const starFillCheck = (event) =>  {
-    if (event.type === 'click' && favorito) {
-        setStarFill(true)
-    } else if (event.type === 'click' && !favoritoLocal) {
-      setFavoritoLocal(favoriteMovie())
-      setStarFill(true)
-    } else if (event.type === 'click' && favoritoLocal) {
-      setStarFill(false)
-      setFavoritoLocal(!unfavoriteMovie())
+  const starFillCheck = async () => {
+    if (starfill === false) {
+      await authContext.favoriteMovie(movie);
+    } else {
+      await authContext.unfavoriteMovie(movie);
     }
   }
 
@@ -226,13 +202,13 @@ function Resultado() {
               : <p>?</p> }
               {authenticated && (<div className='results-movie-details-favorite'>
                 <h4 className='results-movie-details-favorite-circle' onClick={ starFillCheck }>
-                  {starFill || favorito ? <span><MdOutlineFavorite className='results-movie-details-favorite-icon' style={{color: "rgba(255, 0, 0, 0.596"}} /></span> :
+                  {starfill || favorito ? <span><MdOutlineFavorite className='results-movie-details-favorite-icon' style={{color: "rgba(255, 0, 0, 0.596"}} /></span> :
                       <span><MdOutlineFavorite className='results-movie-details-favorite-icon' /></span>}
                 </h4>
               </div>)}
               <div className='results-movie-details-card-streaming-text'>
                 <p>Disponivel em</p>
-                <h2>Asista agora</h2>
+                <h2>Assista agora</h2>
               </div>
             </div>
           </div>
