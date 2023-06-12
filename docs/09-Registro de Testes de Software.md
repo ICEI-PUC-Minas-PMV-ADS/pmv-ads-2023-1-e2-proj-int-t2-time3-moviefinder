@@ -8,10 +8,10 @@ Com base nas funcionalidades, requisitos e casos de testes propostos no item ant
 | Objetivo do Teste | Verificar se o cadastro é realizado de maneira correta |
 | Passos | 1 - Abrir o navegador <br> 2 - Acessar a aplicação <br> 3 - Na página inicial, clicar em "Cadastrar-se" <br> 4 - Selecionar se irá se cadastrar ou acessar a aplicação com a conta do Google <br> 5 - Caso deseje se cadastrar, preencher os campos obrigatórios: Nome, Sobrenome, e-mail, senha e confirmação de senha e clicar em "Cadastrar". Caso deseje acessar a aplicação com a conta do google, clicar em "Acessar com o Google"|
 | Critérios de Êxito | - O cadastro foi realizado com sucesso. |
-| Conclusão do teste | O cadastro foi realizado com sucesso, adicionando todos os dados de Nome, Sobrenome, e-mail, senha, confirmação de senha e outros. O cadastro foi registrado no banco. As validações foram executadas corretamente, não permitindo que um cadastro seja realizado com algum dado em branco ou com alguma regra descumprida, como por exemplo, os caracterers exigidos na senha. Além disso, não é possível fazer mais de um cadastro com o mesmo e-mail e uma mensagem é exibida com este alerta, impedindo de prosseguir com o cadastro. Ao final, quando o cadastro é realizado uma mensagem de confirmação é exibida. Ainda não é possível visualizar e alterar as informações do cadastro. |
+| Conclusão do teste | O cadastro foi realizado com sucesso. Foram adicionados corretmante todos os dados de Nome, Sobrenome, e-mail, senha, confirmação de senha, sexo e idade. O cadastro foi registrado no banco de dados e com isso não há como criar uma nova conta utilizando o mesmo email de uma conta já criada. As validações foram executadas corretamente, não permitindo que um cadastro seja realizado com algum dado em branco ou com alguma regra descumprida, como por exemplo, os caracterers exigidos na senha ou mesmo, senha diferente da confirmação de senha. Para todos os erros ou descumprimento de regras das validações, mensagens de aviso ou sinais em vermelho nos campos são exibidos. Ao final, quando o cadastro é realizado uma mensagem de confirmação é exibida. |
 | Print dos Testes |
 
-https://user-images.githubusercontent.com/114538749/236691685-294c37d9-d12a-49cd-a55d-a5a27040d6ce.mp4 
+https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/7d3c778d-21d0-4570-82f5-c42fe2509ef7
 
 | Caso de Teste | CT-02 – Efetuar login |
 |---------------|--------------------------|
