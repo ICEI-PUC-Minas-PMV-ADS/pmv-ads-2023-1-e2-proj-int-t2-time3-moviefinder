@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using moviefinder.client;
 using moviefinder.dto;
 using moviefinder.dto.filme;
@@ -11,6 +12,7 @@ using moviefinder.dto.usuario;
 using moviefinder.Entities;
 using moviefinder.service;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace moviefinder.controller;
 
@@ -413,4 +415,65 @@ public class FilmeController : ControllerBase
         }
         return BadRequest();
     }
+
+    [HttpGet("makeRecommendationUserList")]
+    public async Task<IActionResult> MakeRecommendationUserList([FromHeader(Name = "Authorization")] string authorizationHeader)
+    {
+        if (authorizationHeader.StartsWith("Bearer "))
+        {
+            var token = authorizationHeader.Substring("Bearer ".Length);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var listaFavoritosDb = await _filmeService.GetListaFilmesFavoritosByUsuario(int.Parse(userId));
+                
+                List<FilmeDto> listaFilmesMdb = new List<FilmeDto>();
+
+                foreach (var favorito in listaFavoritosDb)
+                {
+                    var response = await _theMovieDataBaseClient.FindMovieById(favorito.IdFilme.TheMovieDbId.ToString(),
+                        _apiKey, _apiLanguage);
+                    var movieById = JsonConvert.DeserializeObject<FilmeDto>(response);
+                    listaFilmesMdb.Add(movieById);
+                }
+                
+                List<RecomendacoesFilmeDto> listaFilmesRecomendadosParaUsuario = new List<RecomendacoesFilmeDto>();
+                
+                foreach (var filme in listaFilmesMdb)
+                {
+                    var responseListaFilmesRecomendadosMdb =
+                        await _theMovieDataBaseClient.ListRecommendationsByMovie(filme.Id.ToString(), _apiKey,
+                            _apiLanguage);
+
+                    var recomendacoes = JsonConvert.DeserializeObject<RecomendadoDto>(responseListaFilmesRecomendadosMdb);
+
+                    if (recomendacoes != null && recomendacoes.Results.Count > 0)
+                    {
+                        List<RecomendacoesFilmeDto> listaFilmesOrdenadosPorNota = recomendacoes.Results.OrderByDescending(p => p.VoteAverage).ToList();
+                        
+                        for (int i = 0; i < 4 ; i++)
+                        {
+                            if (listaFilmesRecomendadosParaUsuario.All(item => item.Id != listaFilmesOrdenadosPorNota[i].Id))
+                            {
+                                listaFilmesRecomendadosParaUsuario.Add(listaFilmesOrdenadosPorNota[i]);
+                            }
+                            
+                            if (i.Equals(listaFilmesOrdenadosPorNota.Count - 1))
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                return Ok(listaFilmesRecomendadosParaUsuario);
+            }
+        }
+        return Unauthorized();
+    }
+
 }
