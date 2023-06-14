@@ -469,6 +469,16 @@ public class FilmeController : ControllerBase
                         }
                     }
                 }
+
+                //verifica se na lista finalizada possui algum filme que já está favoritado
+                foreach (var FilmeDto in listaFilmesMdb)
+                {
+                    var itemEncontrado = listaFilmesRecomendadosParaUsuario.Find(item => item.OriginalTitle == FilmeDto.OriginalTitle);
+                    if (itemEncontrado != null)
+                    {
+                        listaFilmesRecomendadosParaUsuario.Remove(itemEncontrado);
+                    }
+                }
                 
                 return Ok(listaFilmesRecomendadosParaUsuario);
             }
