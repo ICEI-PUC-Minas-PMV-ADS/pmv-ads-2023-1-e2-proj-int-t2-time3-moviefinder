@@ -380,10 +380,10 @@ function Home() {
         const newPassword = e.target.value;
         if (newPassword !== '') {
             setIsNewPasswordValid(true);
-            setActualPassword(newPassword);
+            setNewPassword(newPassword);
         } else {
             setIsNewPasswordValid(false);
-            setActualPassword('');
+            setNewPassword('');
         }
     }
 
