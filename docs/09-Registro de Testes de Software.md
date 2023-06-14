@@ -19,8 +19,10 @@ https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-mo
 | Objetivo do Teste | Verificar se o login está ocorrendo corretamente |
 | Passos | 1 - Abrir o navegador <br> 2 - Acessar a aplicação <br> 3 - Na página inicial, clicar em "Login" <br> 4 - Preencher os campos obrigatórios: E-mail e senha <br> 5 - Clicar em "Entrar"|
 | Critérios de Êxito | - O login foi realizado com sucesso, o conteúdo apresentado está associado às preferências do usuário e o mesmo é capaz de acessar o seu perfil  |
-| Conclusão do teste | Ao realizar login uma mensagem de êxito é exibida. O nome do usuário é exibido no canto superior direito da página e os conteúdos relacionados ao usuário, como favoritos, são exibidos corretamente mesmo alterando o usuário. |
+| Conclusão do teste | Ao realizar login, as validações são feitas corretamente, retornando uma mensagem de credenciais inválidas quando algum campo é inserido de forma incorreta, ou então, não seja de acordo com o cadastro realizado. Após inserir os dados corretos uma mensagem de êxito é exibida e o usuário é logado em sua conta. O nome do usuário é exibido no canto superior direito da página e os conteúdos relacionados ao usuário, como favoritos, são exibidos corretamente. Clicando sobre o nome do usuário é possível visualizar o perfil onde são exibidos os dados cadastrados. |
 | Print dos Testes |
+
+https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/c58717b0-e933-4d9b-9bd4-7d77495dc117
 
 | Caso de Teste | CT-03 – Ler/Editar/Excluir Dados do perfil |
 |---------------|--------------------------|
@@ -28,10 +30,10 @@ https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-mo
 | Objetivo do Teste | Verificar se o usuário consegue realizar a edição dos dados ou exclusão do cadastro. |
 | Passos | 1 - Abrir o navegador <br> 2 - Acessar a aplicação <br> 3 - Na página inicial, clicar em "Perfil" <br> 4 - Na página de perfil, clicar em "Alterar Dados" ou "Excluir Conta" <br> 5 - Caso a opção escolhida seja a alteração dos dados, alterar os campos desejados e manter os campos obrigatórios preenchidos <br> 6 - Clicar em "Concluir"|
 | Critérios de Êxito | - As informações do perfil foram alteradas com sucesso de acordo com as informações oferecidas pelo usuário, ou caso a opção selecionada seja a exclusão, o cadastro foi excluído e não é mais possível acessar a conta com as credenciais escolhidas |
-| Conclusão do teste | A edição dos dados ou exclusão de contas ainda não é possível |
+| Conclusão do teste | Na tela principal, após realizar login, ao clicar sobre o nome do usuário exibido na tela principal, o modal do perfil é exibido, e neste, é possível alterar o nome e cadastrar uma nova senha. Ao realizar as mudanças o novo nome do usuário, caso alterado, já é exibido na tela inicial e assim também, durante a realização das alterações no modal as validações da senha foram feitas corretamente, indicando em vermelho quando o valor inserido não condiz com o cadastro realizado no campo "senha atual". Ao realizar o logout e em seguida o login com a senha antiga, não foi possível realizar o login. Realizando o login com a nova senha cadastrada o login foi feito com sucesso. Ao acessar novamente o modal do perfil, clicando sobre o botão de "Deletar", uma mensagem de alerta é exibida, para a confirmação da certeza de deletar o cadastro. Ao prosseguir com a ação deletar uma mensagem de sucesso é exibida informando que o cadastro foi deletado . Ao tentar realizar login com os dados do cadastro, não foi possível logar, uma vez que o cadastro foi realmente deletado.  |
 | Print dos Testes |
 
-![Imagem do WhatsApp de 2023-06-04 à(s) 23 49 54](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/894a5ee8-19f7-4313-933c-8a8ffc91b897)
+https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/eb22fc65-9d0f-4e51-8876-5f0ed401dd8d
 
 | Caso de Teste | CT-04 – Pesquisa de filmes |
 |---------------|--------------------------|
