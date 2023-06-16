@@ -52,7 +52,7 @@ https://user-images.githubusercontent.com/114538749/236646233-32d8120c-0b44-40ce
 | Objetivo do Teste | Verificar se o conteúdo retornado após a pesquisa está classificado corretamente, de acordo com o critério selecionado nos filtros |
 | Passos | 1 - Abrir o navegador <br> 2 - Acessar a aplicação <br> 3 - Na página inicial, clicar em filtros e selecionar um filtro <br> 4 - Buscar por um conteúdo com base no filtro selecionado |
 | Critérios de Êxito | - O conteúdo retornado está de acordo com o filtro selecionado pelo usuário |
-| Conclusão do teste | Ao selecionar um filtro os resultados são filtrados e organizados com sucesso. É possível aplicar filtros de gênero e avaliações, e ainda, alterar os resultados para aplicar novamente os filtros |
+| Conclusão do teste | Ao selecionar um filtro os resultados são filtrados e organizados com sucesso. É possível aplicar filtros de gênero e avaliações, e ainda, alterar os resultados para aplicar novamente os filtros. |
 | Print dos Testes |  
 
 https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/32439873-546c-4e51-8d9f-af1ce9ee13a4
@@ -63,7 +63,7 @@ https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-mo
 | Objetivo do Teste | Verificar se o conteúdo selecionado ou pesquisado apresenta a plataforma de streaming na qual está disponível para exibição. |
 | Passos | 1 - Abrir o navegador <br> 2 - Acessar a aplicação <br> 3 - Na página inicial, selecionar um dos conteúdos exibidos ou realizar uma busca específica <br> 4 - Verificar se o conteúdo escolhido apresenta a plataforma de streaming na qual está presente entre os dados fornecidos |
 | Critérios de Êxito | - A informação sobre a plataforma de streaming está presente entre os diversos dados fornecidos sobre o conteúdo selecionado |
-| Conclusão do teste | Ao selecionar o filme, as informações sobre este filme são exibidas e logo a baixo do pôster do filme, é exibida a plataforma de streaming que o vídeo se encontra disponível |  
+| Conclusão do teste | Ao selecionar o filme, as informações sobre este filme são exibidas e logo a baixo do pôster do filme, é exibida a plataforma de streaming na qual o filme encontra-se disponível. |  
 
 https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/f929235d-4d6c-4fe0-9dd7-5ee3fa317698
 
@@ -84,8 +84,7 @@ https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-mo
 | Objetivo do Teste | Verificar se o usuário logado consegue favoritar conteúdos e se conteúdos relacionados aos seus favoritos são exibidos na tela inicial |
 | Passos | 1 - Abrir o navegador <br> 2 - Acessar a aplicação <br> 3 - Na página inicial, verificar se os conteúdos apresentados estão relacionados com os favoritos do usuário <br> 4 - Na página inicial, selecionar um conteúdo ou realizar uma busca específica <br> 5 - Favoritar o conteúdo selecionado <br> 6 - Na página de favoritos, verificar se o conteúdo favoritado foi inserido na lista de favoritos |
 | Critérios de Êxito | - Os conteúdos exibidos estão relacionados aos favoritos do usuário logado e é possível favoritar conteúdo e visualizá-lo no seu perfil na lista de favoritos  |
-| Conclusão do teste | A lista de favoritos, inicialmente vazia, foi preenchida pelos filmes favoritados e à medida que os filmes são favoritados ou desfavoritados a lista é atualizada. Na aba de recomendados os filmes relacionados aos favoritos são exibidos. |
+| Conclusão do teste | Ao pesquisar por um filme e favorita-lo, ele logo é incluído na lista de favoritos que pode ser acessada em "Meus favoritos", assim também, novos filmes relacionados ao novo favorito são inclusos na lista de filmes recomendados para o usuário, disponível em "Recomendados para você". Do mesmo modo, ao desfavoritar um filme ele logo é excluído da lista de favoritos assim como seus recomendados são removidos da lista de recomendados. Ao pesquisar um filme já favoritado anteriormente, o retorno mostrou o ícone indicando que o filme já foi favoritado. |
 | Print dos Testes |  
 
-https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/e7cb4f30-609d-46e5-af23-d99917b088d4
-
+https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/6eda79ae-f8d4-4d00-8951-8c335503006d
