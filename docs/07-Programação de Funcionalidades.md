@@ -4,10 +4,10 @@ Nesta seção são apresentadas as funcionalidades do sistema.
 
 ## Busca e resultados desejados pelo usuário (RF-01 e RF-02)
 
-Ao acessar o site, no canto superior esquerdo da tela está o botão que encaminha para a área de pesquisa de filmes e relacionados. No modal de pesquisa o usuário digita sua busca e logo abaixo são exibidos os títulos e palavras relacionados ao conteúdo digitado. Em paralelo a isso, são exibidos os pôster dos filmes relacionados à busca. 
+Ao acessar o site, no canto superior esquerdo da tela está o botão que encaminha para a área de pesquisa de filmes e relacionados. No modal de pesquisa o usuário digita sua busca e logo abaixo são exibidos os títulos e palavras relacionados ao conteúdo digitado. Em paralelo a isso, são exibidos os pôsteres dos filmes relacionados à busca. 
 
 ![image](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/015ea308-2eec-405c-b37b-cbddefd27e9d)
-Na imagem acima é possível observar os conteúdos relacionados a busca sendo exibidos tanto na barra de pesquisa, quando na exibição dos pôsters.
+Na imagem acima é possível observar os conteúdos relacionados a busca sendo exibidos tanto na barra de pesquisa, quando na exibição dos pôsteres.
 
 ### Requisitos atendidos
 
@@ -212,10 +212,10 @@ useEffect(() => {
 
 ## Plataforma de Streaming e informações sobre o filme (RF-04 e RF-05)
 
-Ao selecionar o filme desejado os detalhes dos filme são exibidos e logo abaixo do pôster do filme é exibida a plataforam de streaming em que o filme encontra-se disponível. São exibidas as informações de estatísticas sobre as principais críticas, duração total, gênero, liguagem original, sinopse, elenco principal, nome do diretor e outros detalhes.
+Ao selecionar o filme desejado os detalhes dos filmes são exibidos e logo abaixo do pôster do filme é exibida a plataforma de streaming em que o filme encontra-se disponível. São exibidas as informações de estatísticas sobre as principais críticas, duração total, gênero, linguagem original, sinopse, elenco principal, nome do diretor e outros detalhes.
 
 ![image](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/f1eef06f-2054-41a5-8c46-4a643f1f0d49)
-Na imagem acima é possível observar a exibição das informações do filme e a plataforma de streaming em que o filme encontra-se disponível.
+Na imagem acima é possível observar a exibição das informações do filme e a plataforma de streaming em que o filme se  encontra disponível.
 
 ### Requisitos atendidos
 
@@ -461,7 +461,7 @@ const getMovie = async () => {
  
 ## Favoritos do usuário e conteúdos relacionados (RF-06)
 
-O usuário logado pode favoritar filmes ao longo de todo o site por meio do icone de favorito representado por um coração logo a abaixo do pôster da foto. Ao favoritar um filme, a informação é armazena no banco de dados e na aba "Meus Favoritos" o usuário pode visualizar os filmes favoritados por ele. Logo a abaixo na aba "Recomendados para você" o usuário pode visualizar os filmes recomendados baseado em seus favoritos.
+O usuário logado pode favoritar filmes ao longo de todo o site por meio do ícone de favorito representado por um coração logo a abaixo do pôster da foto. Ao favoritar um filme, a informação é armazena no banco de dados e na aba "Meus Favoritos" o usuário pode visualizar os filmes favoritados por ele. Logo a abaixo na aba "Recomendados para você" o usuário pode visualizar os filmes recomendados baseado em seus favoritos.
 
 ![image](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/dc275f93-4e88-4c84-9191-79f2f25647d7)
 Na imagem acima é possível observar o ícone de favorito em vermelho, indicando que o filme foi favoritado.
@@ -887,9 +887,11 @@ return (
 )
 ```
 
-## Cadastro de Usuário (RF-07)
+## Criação, edição e exclusão do Cadastro de Usuário (RF-07)
 
-O modal de cadastro de usuário apresenta os campos a serem preenchidos. Os campos são: Nome, e-mail, senha, confirme sua senha, selecione o gênero e idade. Não será possível cadastrar mais de um usuário com o mesmo endereço de e-mail. Ao tentar cadastrar um usuário com um endereço de e-mail já existente, um alerta é exibido sinalizando que já há usuário cadastrado com o mesmo e-mail. Todos os campos possuem preenchimento obrigatório, caso algum deles não seja preenchido, seu estilo é alterado e se torna destacado em vermelho. Existem validações específicas, além da verificação de campo vazio, para os campos senha, confirmação de senha e endereço de e-mail. O campo senha permitirá no mínimo 5 caracteres e no máximo 8. O campo de confirmação de senha, consequentemente, também será submetido às mesmas validações além de ter seu conteúdo comparado com o conteúdo inserido no campo "senha". O campo e-mail será validado de acordo com o padrão exigido para um endereço de e-mail válido, como a existência do caracter "@" por exemplo. Ao concluir a ação, ou cancelá-la, fechando o modal, todos os campos são reiniciados.
+O modal de cadastro de usuário apresenta os campos a serem preenchidos. Os campos são: Nome, e-mail, senha, confirme sua senha, selecione o gênero e idade. Não será possível cadastrar mais de um usuário com o mesmo endereço de e-mail. Ao tentar cadastrar um usuário com um endereço de e-mail já existente, um alerta é exibido sinalizando que já há usuário cadastrado com o mesmo e-mail. Todos os campos possuem preenchimento obrigatório, caso algum deles não seja preenchido, seu estilo é alterado e se torna destacado em vermelho. Existem validações específicas, além da verificação de campo vazio, para os campos senha, confirmação de senha e endereço de e-mail. O campo senha permitirá no mínimo 5 caracteres e no máximo 8. O campo de confirmação de senha, consequentemente, também será submetido às mesmas validações além de ter seu conteúdo comparado com o conteúdo inserido no campo "senha". O campo e-mail será validado de acordo com o padrão exigido para um endereço de e-mail válido, como a existência do caractere "@" por exemplo. Ao concluir a ação, ou cancelá-la, fechando o modal, todos os campos são reiniciados.
+
+Após a criação do cadastro o usuário pode editar os dados ou remover seu cadastro. Ao clicar sobre seu nome no canto superior direito da página o modal do perfil é exibido permitindo que ele altere campos como nome e senha. O campo de mudança de senha é ativado após a marcação de um checkbox "Redefinir senha?". Caso o valor inserido no campo de "senha atual" não seja correspondente a senha cadastrada anteriormente, o campo exibe um alerta em vermelho e da mesma forma caso a nova senha não cumpra os critérios exigidos de senha. Após o preenchimento dos novos dados corretamente. Ao clicar no botão de "Atualizar", uma mensagem de sucesso é exibida e o nome alterado já aparece modificado no canto superior direito. Para deletar o cadastro, o usuário acessa o modal de perfil e seleciona o botão de "Deletar". Em seguida, uma mensagem de confirmação da ação é exibida e o usuário deve escolher se quer prosseguir com a ação ou deseja cancelar. Caso opte em prosseguir, o cadastro é deletado e uma mensagem de confirmação de exclusão do cadastro é exibida.
 
 <img src="img/cadastro-usuario.png" alt="Cadastrar Usuário">
 
@@ -900,13 +902,31 @@ Na imagem acima é possível observar os campos a serem preenchidos.
 Na imagem acima é possível observar o destaque adquirido pelos campos não preenchidos pelo usuário, após a tentativa de cadastro.
 
 <img src="img/sucesso-cadastro.png" alt="Sucesso no Cadastro">
+
 Na imagem acima é possível observar a mensagem de sucesso após um cadastro bem sucedido.
 
 <img src="img/usuario-banco.png" alt="Usuário salvo no banco">
+
 Na imagem acima é possível observar os dados do usuário gravados no banco de dados.
 
 <img src="img/erro-cadastro.png" alt="Erro no Cadastro">
+
 Na imagem acima é possível observar a mensagem de erro na tentativa de cadastro de um usuário com um endereço de e-mail já existente no banco de dados.
+
+![image](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/507c81df-73eb-4374-ab2d-60737a0b57c6)
+Na imagem acima é possível observar o modal para acesso ao perfil onde estão inseridos os dados do usuário cadastrado.
+
+![image](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/3e07aa93-5667-4a4a-9f99-087bf72c8b56)
+Na imagem acima é possível observar o preenchimento dos campos que serão alterados.
+
+![image](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/899a848e-fb60-4ddc-9c87-5df1cb3a4471)
+Na imagem acima é possível observar a mensagem de sucesso dos dados alterados e novo nome alterado exibido no canto superior direito.
+
+![image](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/e38d0f7b-7e4a-4608-890a-5f82720e3b4d)
+Na imagem acima é possível observar a mensagem de verificação perguntando ao usuário se deseja deletar a conta.
+
+![image](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/65a29e01-b7e2-468a-ac9f-3baf03ec2bae)
+Na imagem acima é possível observar a mensagem confirmação de usuário deletado.
 
 ### Requisitos atendidos
 
@@ -915,6 +935,7 @@ RF-07 - A aplicação deve permitir ao usuário cadastrar, ler, atualizar e excl
 ### Artefatos da funcionalidade
 
 - Home.jsx
+- AuthContext.jsx
 - FilmeController.cs
 - UsuarioService.cs
 
@@ -955,6 +976,111 @@ public async Task<bool> CadastrarUsuario(Usuario usuario)
     }
 ```
 
+```C#
+    [HttpDelete("deletarUsuario")]
+    public async Task<IActionResult> DeletarUsuario([FromHeader(Name = "Authorization")] string authorizationHeader)
+    {
+        if (authorizationHeader.StartsWith("Bearer "))
+        {
+            var token = authorizationHeader.Substring("Bearer ".Length);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var jwtTokenId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+
+            if (!string.IsNullOrEmpty(jwtTokenId))
+            {
+                await _usuarioService.DeletarUsuario(jwtTokenId);
+                return Ok("Usuario deletado com sucesso!");
+            }
+        }
+        return BadRequest();
+    }
+```
+
+```C#
+ public async Task<bool> DeletarUsuario(string userId)
+    {
+        try
+        {
+            var usuarioDb = _context.Usuarios.AsNoTracking().FirstOrDefault(u => u.Id == int.Parse(userId));
+            _context.Usuarios.Remove(usuarioDb);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Ocorreu um erro: {e.Message}");
+            throw;
+        }
+    }
+```    
+
+```C#
+    [HttpPut("alterarInformacoesUsuario")]
+    public async Task<IActionResult> AlterarInformacoesUsuario([FromHeader(Name = "Authorization")] string authorizationHeader,
+        [FromBody] RedefinicaoSenha redefinicao)
+    {
+        if (authorizationHeader.StartsWith("Bearer "))
+        {
+            var token = authorizationHeader.Substring("Bearer ".Length);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var usuarioDb = await _usuarioService.BuscarUsuario(userId);
+                
+                if (redefinicao.Senha != null)
+                {
+                    var isSenhaCorreta = BCrypt.Net.BCrypt.Verify(redefinicao.Senha, usuarioDb.Senha);
+                    if (!isSenhaCorreta)
+                    {
+                        var responseErro = new
+                        {
+                            Message = "Credenciais inválidas!",
+                            Data = usuarioDb.Email
+                        };
+                        return Unauthorized(responseErro);
+                    }
+                }
+
+                var atualizarUsuario = await _usuarioService.AtualizarUsuario(usuarioDb, redefinicao);
+                if (atualizarUsuario)
+                {
+                    return Ok("Usuario alterado com sucesso!");
+                }
+                return BadRequest();
+            }
+        }
+        return Unauthorized("Credenciais inválidas");
+    }
+```
+
+```C#
+    public async Task<bool> AtualizarUsuario(Usuario usuarioDb, RedefinicaoSenha redefinicaoSenha)
+    {
+        try
+        {
+            usuarioDb.Nome = redefinicaoSenha.Nome;
+            if (redefinicaoSenha.Senha != null && redefinicaoSenha.NovaSenha != null)
+            {
+                usuarioDb.Senha = BCrypt.Net.BCrypt.HashPassword(redefinicaoSenha.NovaSenha);
+            }
+            _context.Update(usuarioDb);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Ocorreu um erro: {e.Message}");
+            throw;
+        }
+    }
+```
+
 ```javascript
 const [name, setName] = useState('');
 const [isNameValid, setIsNameValid] = useState(true);
@@ -971,6 +1097,16 @@ const [isGenreValid, setIsGenreValid] = useState(true);
 const [open, setOpen] = React.useState(false);
 const [message, setMessage] = useState('');
 const [severity, setSeverity] = useState('');
+const [isActualPasswordValid, setActualPasswordValid] = useState(true);
+const [newPassword, setNewPassword] = useState('');
+const [isNewPasswordValid, setIsNewPasswordValid] = useState(true);
+const authContext = useContext(AuthContext);
+const {userDto} = authContext;
+const {authenticated} = authContext;
+const token = Cookies.get('moviefinder-token');
+const {changeName} = authContext;
+const [isSubmitButtonEnabled, setIsSubmitButtonEnabled] = useState(true);
+const [checked, setChecked] = useState(false);
   ```
 
 ```javascript
@@ -1080,6 +1216,134 @@ const handleGenreChange = e => {
 };
 ```
 
+```javascript
+  const handleNomePerfilChange = e => {
+        const newName = e.target.value;
+        if (newName !== '') {
+            setNewNameValid(true);
+            setNewName(newName);
+        } else {
+            setNewNameValid(false);
+            setNewName('');
+        }
+
+    }
+
+    const handleCheckBoxChange = e => {
+        setChecked(e.target.checked);
+    }
+
+    const handleActualPasswordChange = e => {
+        const actualPassword = e.target.value;
+        if (actualPassword !== '') {
+            setActualPasswordValid(true);
+            setActualPassword(actualPassword);
+        } else {
+            setActualPasswordValid(false);
+            setActualPassword('');
+        }
+    }
+
+    const handleNewPasswordChange = e => {
+        const newPassword = e.target.value;
+        if (newPassword !== '') {
+            setIsNewPasswordValid(true);
+            setNewPassword(newPassword);
+        } else {
+            setIsNewPasswordValid(false);
+            setNewPassword('');
+        }
+    }
+
+    const updateUser = async () => {
+        try {
+            if ((checked && newName !== '' && actualPassword !== '' && (newPassword !== '' && newPassword.length > 5)) || (!checked && newName !== '')) {
+                await api.put('/movieFinder/alterarInformacoesUsuario',
+                    checked ? {
+                        nome: newName,
+                        senha: actualPassword,
+                        novaSenha: newPassword
+                    } : {
+                        nome: newName,
+                    },
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                    });
+                closeModalFavorites()
+                setSeverity("success");
+                setMessage("Usuario alterado");
+                setOpen(true)
+                changeName(newName)
+            } else {
+                if (newName === '') {
+                    setNewNameValid(false);
+                } else {
+                    setNewNameValid(true);
+                }
+                if (checked && actualPassword === '') {
+                    setActualPasswordValid(false);
+                    console.log(isActualPasswordValid);
+                } else {
+                    setActualPasswordValid(true);
+                }
+                if (checked && newPassword === '' || newPassword.length < 6) {
+                    setIsNewPasswordValid(false);
+                } else {
+                    setIsNewPasswordValid(true);
+                }
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setSeverity("error");
+                setMessage(error.response.data.message);
+                setOpen(true);
+                console.error(error.response.data.message);
+            } else {
+                console.error(error);
+            }
+        }
+    }
+    
+        const deleteUser = async () => {
+        const confirmDelete = confirm("tem certeza que deseja deletar sua conta?");
+        if (confirmDelete) {
+            api.delete('/movieFinder/deletarUsuario',
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                });
+            authContext.logOut();
+            closeModalFavorites()
+            setSeverity("success");
+            setMessage("Usuario deletado");
+            setOpen(true)
+        }
+    }
+```
+
+```javascript
+    const [userDto, setUserDto] = useState(null);
+    const [authenticated, setIsAuthenticated] = useState(false);
+
+    function changeName(nome) {
+        setUserDto({
+            ...userDto, 
+            nome,
+        })
+    }
+
+    function logOut() {
+        Cookies.remove('moviefinder-token');
+        localStorage.removeItem("user");
+
+        setIsAuthenticated(false);
+        setUserDto(null);
+    }
+```
+
 ```html
 <div className="modal-register-home">
     <h1>MovieFinder</h1>
@@ -1130,7 +1394,82 @@ const handleGenreChange = e => {
 </Snackbar>
 ```
 
+```html
+ <div className="modal-perfil">
+                                <div>
+                                    <h1>MovieFinder</h1>
+                                </div>
+                                <div className="modal-perfil-results">
+                                    <FormControl>
+                                        <FormLabel>E-mail:</FormLabel>
+                                        <Input
+                                            disabled={true}
+                                            size="md"
+                                            value={userDto?.email}
+                                        />
+                                    </FormControl>
+                                    <FormControl>
+                                        <FormLabel>Nome:</FormLabel>
+                                        <Input
+                                            color={isNewNameValid ? 'neutral' : 'danger'}
+                                            disabled={false}
+                                            size="md"
+                                            value={newName}
+                                            placeholder={userDto?.nome}
+                                            onChange={handleNomePerfilChange}
+                                        />
+                                    </FormControl>
+                                    <FormControlLabel
+                                        style={{marginTop: '10px'}}
+                                        control={<Checkbox
+                                            style={{marginRight: '5px'}}
+                                            checked={checked}
+                                            onChange={handleCheckBoxChange}
+                                            inputProps={{'aria-label': 'controlled'}}
+                                            sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}
+                                        />} label="Redefinir Senha?"/>
+                                    <FormControl>
+                                        <FormLabel>Senha Atual:</FormLabel>
+                                        <Input
+                                            color={isActualPasswordValid ? 'neutral' : 'danger'}
+                                            disabled={!checked}
+                                            size="md"
+                                            type="password"
+                                            placeholder="Senha atual..."
+                                            value={actualPassword}
+                                            onChange={handleActualPasswordChange}
+                                        />
+                                    </FormControl>
+                                    <FormControl>
+                                        <FormLabel>Nova Senha:</FormLabel>
+                                        <Input
+                                            color={isNewPasswordValid ? 'neutral' : 'danger'}
+                                            disabled={!checked}
+                                            size="md"
+                                            type="password"
+                                            placeholder="Nova Senha..."
+                                            value={newPassword}
+                                            onChange={handleNewPasswordChange}
+                                        />
+                                    </FormControl>
+                                    <div className='modal-perfil-results-button'>
+                                        <Button className="modal-button-perfil"
+                                                onClick={updateUser}>Atualizar</Button>
+                                    </div>
+                                </div>
+                                <Button className="modal-button-perfil" onClick={deleteUser}>Deletar</Button>
+                            </div>
+```
+
 ## Login e validação de campos durante o login (RF-07 e RF-08)
+
+Ao acessar a aplicação no canto superior direito há o campo de login. Ao selecionar este campo o modal de login é exibido com campos de e-mail e senha para preenchimento. Quando o usuário coloca os dados incorretos ou deixa algum campo sem preenchimento uma mensagem de alerta é exibida. Quando os campos são colocados corretamente conforme o cadastro realizado, uma mensagem de sucesso é exibida. O usuário é encaminhado para a página principal e seu nome é exibido no canto superior direito.
+
+![image](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/8f944de2-4f0c-405a-aea3-4e09d7fb82ff)
+Na imagem acima é possível observar a mensagem de alerta quando algum campo é deixado em branco ou então está com um valor incorreto.
+
+![image](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/5c41fe6e-777a-400d-8c1b-ddddea189d4c)
+Na imagem acima é possível observar a mensagem de sucesso do login e em seguida, é possível observar o nome do usuário no canto superior direito da tela.
 
 ### Requisitos atendidos
 RF-07 - A aplicação deve permitir ao usuário realizar login na plataforma.
