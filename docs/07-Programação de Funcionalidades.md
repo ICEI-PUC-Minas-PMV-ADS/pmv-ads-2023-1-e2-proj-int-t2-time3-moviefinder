@@ -74,10 +74,138 @@ RF-02 - A aplicação deve exibir resultados relacionados às palavras buscadas
             </div>
           </FormControl>
 ```
+## Aplicação de filtro nas buscas (RF-03)
+
+Quando o usuário faz uma busca, após os resultados serem exibidos, é possível aplicar filtros como gênero e tipo de avaliação.
+
+### Requisitos atendidos
+
+RF-03 - A aplicação deve conter filtros para auxiliar na busca do conteúdo pesquisado.
+
+### Artefatos da funcionalidade
+
+- Busca.jsx
+- FilmeController.cs
+- TheMovieDataBaseClient.cs
+
+```C#
+  [HttpGet("discover/movie")]
+    public async Task<IActionResult> DiscoverMovies([FromQuery] string genreId)
+    {
+        var response = await _theMovieDataBaseClient.DiscoverMovies(_apiKey, _apiLanguage, genreId);
+        var discover = JsonConvert.DeserializeObject<ListaDiscoverFilmeDto>(response);
+        return Ok(discover);
+    }
+
+ [HttpGet("movie/popularity")]
+    public async Task<IActionResult> ListPopularityMovies()
+    {
+        var response = await _theMovieDataBaseClient.ListPopularityMovies(_apiKey, _apiLanguage);
+        var moviesByPopularity = JsonConvert.DeserializeObject<ListaPopularFilmes>(response);
+        return Ok(moviesByPopularity.Results);
+    }
+    
+    [HttpGet("genre/list")]
+    public async Task<IActionResult> ListGenres()
+    {
+        var response = await _theMovieDataBaseClient.ListGenres(_apiKey, _apiLanguage);
+        var genres = JsonConvert.DeserializeObject<GenerosDto>(response);
+        return Ok(genres);
+    }
+```
+
+```C#
+  public async Task<string> ListGenres(string apiKey, string apiLanguage)
+    {
+        return await _httpClient.GetStringAsync(_url + $"/genre/movie/list?api_key={apiKey}&language={apiLanguage}");
+    }
+    
+        public async Task<string> ListPopularityMovies(string apiKey, string apiLanguage)
+    {
+        return await _httpClient.GetStringAsync(_url + $"/movie/popular?page=1&api_key={apiKey}&language={apiLanguage}");
+    }
+    
+      public async Task<string> DiscoverMovies(string apiKey, string apiLanguage, string genreId )
+    {
+        return await _httpClient.GetStringAsync(_url + $"/discover/movie?api_key={apiKey}&language={apiLanguage}&with_genres={genreId}");
+    }
+```
+
+```javascript
+  const getDiscoverList = async (name) => {
+    const response = await api.get(`/movieFinder/discover/movie?genreId=${name.id}`)
+    setMovies(response.data.results)
+  }
+
+ const orderMoviesByBestVote = () => {
+    const orderMovies = [...movies].sort((a, b) => b.voteAverage - a.voteAverage)
+    setMovies(orderMovies)
+  }
+
+  const orderMoviesByWorstVote = () => {
+    const orderMovies = [...movies].sort((a, b) => a.voteAverage - b.voteAverage)
+    setMovies(orderMovies)
+  }
+  
+    const filterOptions = createFilterOptions({
+    matchFrom: 'start',
+    stringify: (option) => option.title,
+  });
+  
+    const getPopularMovies = async () => {
+    const response = await api.get('/movieFinder/movie/popularity')
+    setMovies(response.data)
+    setPopularMovies(response.data)
+  }
+
+  const getGenreList = async () => {
+    const response = await api.get('/movieFinder/genre/list')
+    setGenreList(response.data.genres) 
+  }
+  
+    useEffect(() => {
+    getPopularMovies()
+    getGenreList()
+  }, [])
+```
+
+```html
+           <FormControl id="filter-demo">
+            <div className="teste">
+              <Autocomplete
+                className='teste'
+                placeholder="Digite sua busca"
+                options={movies}
+                getOptionLabel={(option) => option.title || ''}
+                filterOptions={filterOptions}
+                inputValue={query}
+                onInputChange={handleChange}
+                style={{margin: "30px"}}
+                clearOnBlur={false}
+              />
+            </div>
+          </FormControl>
+
+            <h2>Filtros</h2>
+            <MenuItem onClick={orderReleaseDate}>Lançamentos</MenuItem>
+            <SubMenu label="Generos" >
+              {genreList.map((name) => (
+                <MenuItem onClick={() => getDiscoverList(name)}>
+                  <p>
+                    {name.name}
+                  </p>
+                </MenuItem>
+              ))}
+            </SubMenu>
+            <SubMenu label="Por nota">
+              <MenuItem onClick={orderMoviesByBestVote}> Melhores avaliados </MenuItem>
+              <MenuItem onClick={orderMoviesByWorstVote}> Piores avaliados </MenuItem>
+            </SubMenu>
+```
 
 ## Plataforma de Streaming e informações sobre o filme (RF-04 e RF-05)
 
-Ao selecionar o filme desejado os detalhes dos filme são exibidos e logo abaixo do pôster do filme é exibida a plataforam de streaming em que o filme encontra-se disponível. Sãpo exibidas as informações de estatísticas sobre as principais críticas, duração total, gênero, liguagem original, sinopse, elenco principal, nome do diretor e outros detalhes.
+Ao selecionar o filme desejado os detalhes dos filme são exibidos e logo abaixo do pôster do filme é exibida a plataforam de streaming em que o filme encontra-se disponível. São exibidas as informações de estatísticas sobre as principais críticas, duração total, gênero, liguagem original, sinopse, elenco principal, nome do diretor e outros detalhes.
 
 ### Requisitos atendidos
 
@@ -157,6 +285,11 @@ public async Task<string> ListProviders(string apiKey, string apiLanguage)
     {
         return await _httpClient.GetStringAsync(_url + $"/watch/providers/movie?api_key={apiKey}&language={apiLanguage}&watch_region=BR");
     }
+```
+
+```javascript
+  const [popularMovies, setPopularMovies] = useState([]);
+  const [genreList, setGenreList] = useState([])
 ```
 
 ```javascript
@@ -365,17 +498,17 @@ O usuário logado pode favoritar filmes ao longo de todo o site por meio do icon
 RF-06 - A aplicação deve sugerir conteúdos relacionados às buscas já realizadas anteriormente e faviritar conteúdos.	
  
  ### Artefatos da funcionalidade
-- Home.jsx
 - Busca.jsx
 - Resultado.jsx
 - AuthContext.jsx
 - FilmeController.cs
+- FilmeService.cs
 - UsuarioService.cs
 
-```C# 
- [HttpPost("favoritarFilme")]
+```C#
+[HttpGet("favoritarFilme/{movieId}")]
     public async Task<IActionResult> FavoritarFilme([FromHeader(Name = "Authorization")] string authorizationHeader,
-        [FromBody] FilmeDto filmeDto)
+        string movieId)
     {
         if (authorizationHeader.StartsWith("Bearer "))
         {
@@ -387,6 +520,8 @@ RF-06 - A aplicação deve sugerir conteúdos relacionados às buscas já realiz
 
             if (!string.IsNullOrEmpty(userId))
             {
+                var movieById = await _theMovieDataBaseClient.FindMovieById(movieId, _apiKey, _apiLanguage);
+                var filmeDto = JsonConvert.DeserializeObject<FilmeDto>(movieById);
                 var filmeFavoritado = await _filmeService.FavoritarFilme(userId, filmeDto);
 
                 if (filmeFavoritado)
@@ -408,10 +543,8 @@ RF-06 - A aplicação deve sugerir conteúdos relacionados às buscas já realiz
 
         return Unauthorized();
     }
-```
 
-```C#
-    [HttpGet("favoriteList")]
+[HttpGet("favoriteList")]
     public async Task<IActionResult> getFavoritesMoviesList(
         [FromHeader(Name = "Authorization")] string authorizationHeader)
     {
@@ -444,12 +577,9 @@ RF-06 - A aplicação deve sugerir conteúdos relacionados às buscas já realiz
 
         return Unauthorized();
     }
- ```
- 
- ```C#
-  [HttpGet("isFilmeFavoritado/{movieId}")]
-    public async Task<IActionResult> IsFilmeFavoritado([FromHeader(Name = "Authorization")] string authorizationHeader,
-        string movieId)
+
+[HttpGet("makeRecommendationUserList")]
+    public async Task<IActionResult> MakeRecommendationUserList([FromHeader(Name = "Authorization")] string authorizationHeader)
     {
         if (authorizationHeader.StartsWith("Bearer "))
         {
@@ -457,19 +587,67 @@ RF-06 - A aplicação deve sugerir conteúdos relacionados às buscas já realiz
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtToken = tokenHandler.ReadJwtToken(token);
 
-            var usuarioId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
 
-            var isFilmeFavoritado = await _usuarioService.isFilmeFavoritado(usuarioId, movieId);
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var listaFavoritosDb = await _filmeService.GetListaFilmesFavoritosByUsuario(int.Parse(userId));
+                
+                List<FilmeDto> listaFilmesMdb = new List<FilmeDto>();
 
-            return Ok(isFilmeFavoritado);
+                foreach (var favorito in listaFavoritosDb)
+                {
+                    var response = await _theMovieDataBaseClient.FindMovieById(favorito.IdFilme.TheMovieDbId.ToString(),
+                        _apiKey, _apiLanguage);
+                    var movieById = JsonConvert.DeserializeObject<FilmeDto>(response);
+                    listaFilmesMdb.Add(movieById);
+                }
+                
+                List<RecomendacoesFilmeDto> listaFilmesRecomendadosParaUsuario = new List<RecomendacoesFilmeDto>();
+                
+                foreach (var filme in listaFilmesMdb)
+                {
+                    var responseListaFilmesRecomendadosMdb =
+                        await _theMovieDataBaseClient.ListRecommendationsByMovie(filme.Id.ToString(), _apiKey,
+                            _apiLanguage);
+
+                    var recomendacoes = JsonConvert.DeserializeObject<RecomendadoDto>(responseListaFilmesRecomendadosMdb);
+
+                    if (recomendacoes != null && recomendacoes.Results.Count > 0)
+                    {
+                        List<RecomendacoesFilmeDto> listaFilmesOrdenadosPorNota = recomendacoes.Results.OrderByDescending(p => p.VoteAverage).ToList();
+                        
+                        for (int i = 0; i < 4 ; i++)
+                        {
+                            if (listaFilmesRecomendadosParaUsuario.All(item => item.Id != listaFilmesOrdenadosPorNota[i].Id))
+                            {
+                                listaFilmesRecomendadosParaUsuario.Add(listaFilmesOrdenadosPorNota[i]);
+                            }
+                            
+                            if (i.Equals(listaFilmesOrdenadosPorNota.Count - 1))
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                foreach (var FilmeDto in listaFilmesMdb)
+                {
+                    var itemEncontrado = listaFilmesRecomendadosParaUsuario.Find(item => item.OriginalTitle == FilmeDto.OriginalTitle);
+                    if (itemEncontrado != null)
+                    {
+                        listaFilmesRecomendadosParaUsuario.Remove(itemEncontrado);
+                    }
+                }
+                
+                return Ok(listaFilmesRecomendadosParaUsuario);
+            }
         }
-
         return Unauthorized();
     }
-```
 
-```C#    
-    [HttpGet("desfavoritarFilme/{movieId}")]
+[HttpGet("desfavoritarFilme/{movieId}")]
     public async Task<IActionResult> DesfavoritarFilme([FromHeader(Name = "Authorization")] string authorizationHeader,
         string movieId)
     {
@@ -501,69 +679,69 @@ RF-06 - A aplicação deve sugerir conteúdos relacionados às buscas já realiz
                 }
             }
         }
+        return Unauthorized();
+    }
+    
+    [HttpGet("isFilmeFavoritado/{movieId}")]
+    public async Task<IActionResult> IsFilmeFavoritado([FromHeader(Name = "Authorization")] string authorizationHeader,
+        string movieId)
+    {
+        if (authorizationHeader.StartsWith("Bearer "))
+        {
+            var token = authorizationHeader.Substring("Bearer ".Length);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var usuarioId = jwtToken.Claims.FirstOrDefault(c => c.Type.Equals("userId")).Value;
+
+            var isFilmeFavoritado = await _usuarioService.isFilmeFavoritado(usuarioId, movieId);
+
+            return Ok(isFilmeFavoritado);
+        }
 
         return Unauthorized();
     }
- ```
+```
  
- ```C#  
- public async Task<bool> FavoritarFilme(string userId, FilmeDto filmeDto)
+```C# 
+    public async Task<string> FindMovieById(string movieId, string apiKey, string apiLanguage)
     {
-        try
-        {
-            var theMovieDbId = filmeDto.Id;
-            var filmeDb = await GetFilmeByTheMovieDbId(theMovieDbId);
-            var usuario = await _context.Usuarios.FindAsync(int.Parse(userId));
-
-            if (filmeDb != null)
-            {
-                var filmesFavoritosByUsuarioAndFilme = await GetFilmesFavoritosByUsuarioAndFilme(usuario, filmeDb);
-
-                if (filmesFavoritosByUsuarioAndFilme == null)
-                {
-                    var filmeFavorito = new FilmeFavorito
-                    {
-                        IdFilme = filmeDb,
-                        IdUsuario = usuario
-                    };
-                    
-                    _context.Add(filmeFavorito);
-                    await _context.SaveChangesAsync();
-
-                    return true;
-                }
-
-                return false;
-            }
-
-            {
-                var filme = new Filme
-                {
-                    Nome = filmeDto.Title,
-                    TheMovieDbId = filmeDto.Id
-                };
-
-                var filmeFavorito = new FilmeFavorito
-                {
-                    IdFilme = filme,
-                    IdUsuario = usuario
-                };
-                
-                _context.Add(filmeFavorito);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Ocorreu um erro: {e.Message}");
-            throw;
-        }
+        Console.WriteLine(_url + $"/movie/{movieId}?api_key={apiKey}&language={apiLanguage}&append_to_response=credits%2Crecommendations%2Cwatch%2Fproviders");
+        return await _httpClient.GetStringAsync(_url + $"/movie/{movieId}?api_key={apiKey}&language={apiLanguage}&append_to_response=credits%2Crecommendations%2Cwatch%2Fproviders");
     }
- ```
- 
-  ```C#  
-  public async Task<bool> DesfavoritarFilme(string userId, string movieId)
+    
+    public async Task<string> ListRecommendationsByMovie(string movieId, string apiKey, string apiLanguage)
+    {
+        return await _httpClient.GetStringAsync(_url + $"/movie/{movieId}/recommendations?api_key={apiKey}&language={apiLanguage}&page=1");
+    }
+    
+    
+```
+
+```C# 
+public async Task<bool> isFilmeFavoritado(string usuarioId, string movieId)
+    {
+        var filmeFavoritado = await _context.FilmesFavoritos
+            .AnyAsync(ff => ff.IdUsuario.Id == int.Parse(usuarioId) && ff.IdFilme.TheMovieDbId == int.Parse(movieId));
+
+        return filmeFavoritado;
+    }
+```
+
+```C# 
+public async Task<List<FilmeFavorito>> GetListaFilmesFavoritosByUsuario(int usuarioId)
+    {
+        var usuarioDb = await _context.Usuarios.FindAsync(usuarioId);
+        
+        var filmeFavoritoLista = await _context.FilmesFavoritos
+            .Include(ff => ff.IdFilme)
+            .Where(ff => ff.IdUsuario == usuarioDb)
+            .ToListAsync();
+        
+        return filmeFavoritoLista;
+    }
+    
+public async Task<bool> DesfavoritarFilme(string userId, string movieId)
     {
         try
         {
@@ -594,64 +772,20 @@ RF-06 - A aplicação deve sugerir conteúdos relacionados às buscas já realiz
     }
 ```
 
-```C# 
-  public async Task<List<FilmeFavorito>> GetListaFilmesFavoritosByUsuario(int usuarioId)
-    {
-        var usuarioDb = await _context.Usuarios.FindAsync(usuarioId);
-        
-        var filmeFavoritoLista = await _context.FilmesFavoritos
-            .Include(ff => ff.IdFilme)
-            .Where(ff => ff.IdUsuario == usuarioDb)
-            .ToListAsync();
-        
-        return filmeFavoritoLista;
+```javascript
+    const gotoDetails = async (movie) => {
+    if (authenticated) {
+      await authContext.isFavorite(movie);
     }
-```
-
-```C# 
-private async Task<FilmeFavorito?> GetFilmesFavoritosByUsuarioAndFilme(Usuario usuario, Filme filme)
-    {
-        
-        var filmeFavorito = await _context.FilmesFavoritos
-            .FirstOrDefaultAsync(ff => ff.IdUsuario == usuario && ff.IdFilme == filme);
-    
-        return filmeFavorito;
-    }
-```
-
-```C#
-    public async Task<bool> isFilmeFavoritado(string usuarioId, string movieId)
-    {
-        var filmeFavoritado = await _context.FilmesFavoritos
-            .AnyAsync(ff => ff.IdUsuario.Id == int.Parse(usuarioId) && ff.IdFilme.TheMovieDbId == int.Parse(movieId));
-
-        return filmeFavoritado;
-    }
+    navigate(`/Resultado/${movie.id}`);
+  }
 ```
 
 ```javascript
- async function isFavorite(movie) {
-        const token = Cookies.get('moviefinder-token');
-        const response = await api.get(`/movieFinder/isFilmeFavoritado/${movie.id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        setFavorito(response.data);
-    }
-```
-```javascript
-const showModalFavorites = () => {
-        setvisibleFavorites(true);
-    }
-```    
-```javascript
-    const closeModalFavorites = () => {
-        setvisibleFavorites(false);
-    }
-```
-```javascript
- const getFavoritesList = async () => {
+const authContext = useContext(AuthContext);
+const {authenticated} = authContext;
+
+const getFavoritesList = async () => {
     const response = await api.get(`/movieFinder/favoriteList`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -660,10 +794,9 @@ const showModalFavorites = () => {
     setMovies(response.data)
     setFavoriteMovies(response.data)
   }
-```
-```javascript
-const getRecommendedMovies = async () => {
-    const response = await api.get(`/movieFinder/recommendation/list`, {
+
+  const getRecommendedMovies = async () => {
+    const response = await api.get('/movieFinder/makeRecommendationUserList', {
       headers: {
         'Authorization': `Bearer ${token}`
       },
@@ -677,56 +810,9 @@ const getRecommendedMovies = async () => {
     setRecommendedMovies(response?.data)
   }
 ```
- const unfavoriteMovie  = async () => {
-    const response = await api.get(`/movieFinder/desfavoritarFilme/${movie.id}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
 
-    return setFavoritoLocal(response.data);
-  };
-  ```javascript
-    const starFillCheck = (event) =>  {
-    if (!event.type === 'click' && favorito) {
-        setStarFill(true)
-    } else if (event.type === 'click' && !favoritoLocal) {
-      setFavoritoLocal(favoriteMovie())
-      setStarFill(true)
-    } else if (event.type === 'click' && favoritoLocal) {
-      setStarFill(false)
-      setFavoritoLocal(!unfavoriteMovie())
-    }
-  }
-  ```
-```javascript
- const favoriteMovie  = async () => {
-    const response = await api.post('/movieFinder/favoritarFilme', movie, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    return setFavoritoLocal(response.data);
-  };
-```
 ```html
-<div>
-                            {userDto !== null ? (
-                                <div style={{display: 'flex'}}>
-                                    <h2 style={{paddingRight: '15px'}} onClick={showModalFavorites}>{userDto.nome}</h2>
-                                    <h2 onClick={logout}>Logout</h2>
-                                </div>
-                            ) : (
-                                <div style={{display: 'flex'}}>
-                                    <h2 onClick={showModalRegister} style={{paddingRight: '15px'}}>Cadastro</h2>
-                                    <h2 onClick={showModalLogin}>Login</h2>
-                                </div>
-                            )}
-                        </div>
-```
-```html
-<div className="sidebar-favorite-search">
+            <div className="sidebar-favorite-search">
               <h3>Favoritos</h3>
               {authenticated ? (
                   <>
@@ -738,22 +824,87 @@ const getRecommendedMovies = async () => {
               )}
             </div>
 ```
+
+```javascript
+  const [recomendationMovies, setRecomendationMovies ] = useState([])
+  const authContext = useContext(AuthContext);
+  const {authenticated} = authContext;
+  const token = Cookies.get('moviefinder-token');
+  const {favorito} = authContext;
+  const {starfill} = authContext;
+  
+    const starFillCheck = async () => {
+    if (starfill === false) {
+      await authContext.favoriteMovie(movie);
+    } else {
+      await authContext.unfavoriteMovie(movie);
+    }
+  }
+  
+    const getRecomendationMovies = async () => {
+    const response = await api.get(`/movieFinder/recommendation/list/${id}`)
+    setRecomendationMovies(response.data.results)
+  }
+```
+
 ```html
-            <div className='results-movie-details-card-streaming'>
-              {movie?.providers?.results?.br?.flatrate !== null && movie?.providers?.results?.br?.flatrate[0].logoPath ?
-              <img src={"https://image.tmdb.org/t/p/original/" + movie?.providers?.results?.br?.flatrate[0].logoPath} alt="plataforma" />
-              : <p>?</p> }
               {authenticated && (<div className='results-movie-details-favorite'>
                 <h4 className='results-movie-details-favorite-circle' onClick={ starFillCheck }>
-                  {starFill || favorito ? <span><MdOutlineFavorite className='results-movie-details-favorite-icon' style={{color: "rgba(255, 0, 0, 0.596"}} /></span> :
+                  {starfill || favorito ? <span><MdOutlineFavorite className='results-movie-details-favorite-icon' style={{color: "rgba(255, 0, 0, 0.596"}} /></span> :
                       <span><MdOutlineFavorite className='results-movie-details-favorite-icon' /></span>}
                 </h4>
               </div>)}
-              <div className='results-movie-details-card-streaming-text'>
-                <p>Disponivel em</p>
-                <h2>Asista agora</h2>
-              </div>
-            </div>
+```
+
+```javascript
+    const [starfill, setStarfill] = useState(false);
+    
+    async function favoriteMovie(movie) {
+        const token = Cookies.get('moviefinder-token');
+        const response = await api.get(`/movieFinder/favoritarFilme/${movie.id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        setStarfill(true)
+    }
+    
+      async function unfavoriteMovie(movie) {
+        const token = Cookies.get('moviefinder-token');
+        const response = await api.get(`/movieFinder/desfavoritarFilme/${movie.id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        setStarfill(false)
+    }    
+    
+        async function isFavorite(movie) {
+        const token = Cookies.get('moviefinder-token');
+        const response = await api.get(`/movieFinder/isFilmeFavoritado/${movie.id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setStarfill(response.data)
+    }
+    
+```    
+
+```html
+return (
+        <AuthContext.Provider value={{ authenticated, logIn, logOut, userDto, isFavorite, changeName, favoriteMovie, unfavoriteMovie, starfill }}>
+            {children}
+        </AuthContext.Provider>
+    )
+```
+
+```javascript
+
+```
+```html
+
 ```
 
 ## Cadastro de Usuário (RF-07)
@@ -1030,3 +1181,18 @@ const handleGenreChange = e => {
                 </Alert>
               </Snackbar>
 ```
+
+## Favoritos do usuário e conteúdos relacionados (RF-06)
+
+### Requisitos atendidos
+RF-07 - A aplicação deve permitir ao usuário realizar login na plataforma.
+ 
+### Artefatos da funcionalidade
+ 
+ 
+## Favoritos do usuário e conteúdos relacionados (RF-06)
+
+### Requisitos atendidos
+RF-08 - A aplicação deve realizar a verificação de login de usuário na plataforma.
+ 
+### Artefatos da funcionalidade
