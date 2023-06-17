@@ -31,14 +31,14 @@ Figura - Tela do kanban no Trello utilizada pelo grupo
 
 <p>As ferramentas do projeto são: </p>
 
-<p>Editor de código: Visual Studio / Visual Studio Code </p>
+<p>Editor de código: Visual Studio / Visual Studio Code / Webstorm / Rider </p>
 <p>Ferramenta de gerenciamento: Github / Trello </p>
 <p>Ferramenta de comunicação: Microsoft Teams / Discord </p>
-<p>Ferramenta de desenho de tela (wireframing): </p>
-
-
+<p>Ferramenta de desenho de tela (wireframe): Figma </p>
 
 |AMBIENTE    | PLATAFORMA  | LINK DE ACESSO |
 |------|-----------------------------------------|----|
-|Repositório de código fonte| GitHub | (https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder) | 
-|Kaban| Trello | (https://trello.com/b/8tOr5q9j/kanban-moviefinder) |
+|Repositório de código fonte|<i>GitHub</i>| [MovieFinder GitHub](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder) | 
+|Kaban|<i>Trello</i>| [Kaban](https://trello.com/b/8tOr5q9j/kanban-moviefinder) |
+|Hospedagem Back-end e banco de Dados |<i>Azure</i>| [Back-end Azure](https://projetopucmoviefinder.azurewebsites.net/v1/public)|
+|Hospedagem Front-end|<i>Vercel</i>| [Front-end Vercel](https://pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder.vercel.app/) |
