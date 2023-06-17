@@ -484,7 +484,7 @@ function Home() {
                             showCloseButton={true}
                             className="rodal-favorites-results"
                             width={450}
-                            height={450}
+                            height={570}
                             customStyles={{
                                 background: 'linear-gradient(45deg, rgba(6,35,64,1) 24%, rgba(6,10,64,1) 49%, rgba(11,4,46,1) 68%)',
                                 borderRadius: '10px',
@@ -551,8 +551,10 @@ function Home() {
                                         <Button className="modal-button-perfil"
                                                 onClick={updateUser}>Atualizar</Button>
                                     </div>
+                                    <div className='modal-perfil-delete-button'>
+                                        <Button className="modal-button-perfil" onClick={deleteUser}>Deletar</Button>
+                                    </div>
                                 </div>
-                                <Button className="modal-button-perfil" onClick={deleteUser}>Deletar</Button>
                             </div>
                         </Rodal>
                         <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={open}
@@ -619,7 +621,7 @@ function Home() {
                             showCloseButton={true}
                             className="rodal-register-home"
                             width={450}
-                            height={500}
+                            height={600}
                             customStyles={{
                                 background: 'linear-gradient(45deg, rgba(6,35,64,1) 24%, rgba(6,10,64,1) 49%, rgba(11,4,46,1) 68%)',
                                 borderRadius: '10px',

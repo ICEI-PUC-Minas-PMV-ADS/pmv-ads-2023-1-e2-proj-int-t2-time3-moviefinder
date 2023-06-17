@@ -285,3 +285,12 @@
     width: 250px;
     align-items: center;
 }
+
+.modal-perfil-delete-button {
+    gap: 10px;
+    height: 50px;
+}
+.modal-perfil-results-button {
+    gap: 10px;
+    height: 50px;
+}
