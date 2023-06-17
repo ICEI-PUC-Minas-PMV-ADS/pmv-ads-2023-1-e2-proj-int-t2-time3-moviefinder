@@ -900,13 +900,6 @@ return (
     )
 ```
 
-```javascript
-
-```
-```html
-
-```
-
 ## Cadastro de Usuário (RF-07)
 
 O modal de cadastro de usuário apresenta os campos a serem preenchidos. Os campos são: Nome, e-mail, senha, confirme sua senha, selecione o gênero e idade. Não será possível cadastrar mais de um usuário com o mesmo endereço de e-mail. Ao tentar cadastrar um usuário com um endereço de e-mail já existente, um alerta é exibido sinalizando que já há usuário cadastrado com o mesmo e-mail. Todos os campos possuem preenchimento obrigatório, caso algum deles não seja preenchido, seu estilo é alterado e se torna destacado em vermelho. Existem validações específicas, além da verificação de campo vazio, para os campos senha, confirmação de senha e endereço de e-mail. O campo senha permitirá no mínimo 5 caracteres e no máximo 8. O campo de confirmação de senha, consequentemente, também será submetido às mesmas validações além de ter seu conteúdo comparado com o conteúdo inserido no campo "senha". O campo e-mail será validado de acordo com o padrão exigido para um endereço de e-mail válido, como a existência do caracter "@" por exemplo. Ao concluir a ação, ou cancelá-la, fechando o modal, todos os campos são reiniciados.
@@ -1182,17 +1175,217 @@ const handleGenreChange = e => {
               </Snackbar>
 ```
 
-## Favoritos do usuário e conteúdos relacionados (RF-06)
+## Login e validação de campos durante o login (RF-07 e RF-08)
 
 ### Requisitos atendidos
 RF-07 - A aplicação deve permitir ao usuário realizar login na plataforma.
- 
-### Artefatos da funcionalidade
- 
- 
-## Favoritos do usuário e conteúdos relacionados (RF-06)
-
-### Requisitos atendidos
 RF-08 - A aplicação deve realizar a verificação de login de usuário na plataforma.
- 
+
 ### Artefatos da funcionalidade
+ 
+- TokenService
+- FilmeController.cs
+- FilmeService.cs
+- UsuarioService.cs
+- AuthContext.jsx
+- Home.jsx
+
+```C#
+[HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] UsuarioDto usuarioDto)
+    {
+        var usuario = await _usuarioService.Login(usuarioDto);
+        if (usuario == null)
+        {
+            var responseErro = new
+            {
+                Message = "Credenciais inválidas!",
+                Data = usuarioDto.Email
+            };
+
+            return Unauthorized(responseErro);
+        }
+
+        var isSenhaCorreta = BCrypt.Net.BCrypt.Verify(usuarioDto.Senha, usuario.Senha);
+
+        if (!isSenhaCorreta)
+        {
+            var responseErro = new
+            {
+                Message = "Credenciais inválidas!",
+                Data = usuarioDto.Email
+            };
+            return Unauthorized(responseErro);
+        }
+
+        var usuarioAuthDto = new UsuarioAuthDto
+        {
+            Nome = usuario.Nome,
+            Email = usuario.Email,
+            Idade = usuario.Idade,
+            Genero = usuario.Genero
+        };
+
+        var token = TokenService.GenerateToken(usuario);
+
+        var responseOk = new
+        {
+            Message = "Login efetuado com sucesso!",
+            Data = usuarioAuthDto,
+            token
+        };
+
+        return Ok(responseOk);
+    }
+```
+
+```C#
+    public async Task<Usuario?> Login(UsuarioDto usuarioDto)
+    {
+        try
+        {
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == usuarioDto.Email);
+            return usuario;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Ocorreu um erro: {e.Message}");
+            throw;
+        }
+    }
+```
+
+```C#
+  public static object GenerateToken(Usuario usuario)
+    {
+        var key = Encoding.ASCII.GetBytes(Key.Secret);
+        var tokenConfig = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new Claim[]
+            {
+                new Claim("userId", usuario.Id.ToString()),
+            }),
+            Expires = DateTime.UtcNow.AddDays(2),
+            SigningCredentials =
+                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenConfig);
+        var tokenString = tokenHandler.WriteToken(token);
+
+        return new
+        {
+            token = tokenString
+        };
+    }
+```
+
+```javascript
+const [userDto, setUserDto] = useState(null);
+const [authenticated, setIsAuthenticated] = useState(false);
+    
+async function logIn(emailLogin, passwordLogin) {
+        const response = await api.post('/movieFinder/login', {
+            email: emailLogin,
+            senha: passwordLogin
+        });
+
+        setIsAuthenticated(true);
+        setUserDto(response.data.data)
+
+        Cookies.set('moviefinder-token', response.data.token.token, {expires: 2})
+        localStorage.setItem("user", JSON.stringify(response.data.data))
+        return response.data;
+    }
+```
+
+```html
+        <AuthContext.Provider value={{ authenticated, logIn, logOut, userDto, isFavorite, changeName, favoriteMovie, unfavoriteMovie, starfill }}>
+            {children}
+        </AuthContext.Provider>
+```
+
+```javascript
+    const showModalLogin = () => {
+        setvisibleLogin(true);
+    }
+    const closeModalLogin = () => {
+        setvisibleLogin(false);
+        setEmailLogin('');
+        setPasswordLogin('');
+    }
+    
+    const handleLogin = async () => {
+        try {
+            const response = await authContext.logIn(emailLogin, passwordLogin);
+            navigate('/');
+            closeModalLogin();
+            setSeverity("success");
+            setMessage(response.message);
+            setOpen(true);
+
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setSeverity("error");
+                setMessage(error.response.data.message);
+                setOpen(true);
+                console.error(error.response.data.message);
+            } else {
+                console.error(error);
+            }
+        }
+    }
+    
+```html
+<Rodal
+                            visible={visibleLogin}
+                            onClose={closeModalLogin}
+                            showMask={true}
+                            closeOnEsc={true}
+                            closeMaskOnClick={true}
+                            showCloseButton={true}
+                            className="rodal-login-home"
+                            width={450}
+                            height={500}
+                            customStyles={{
+                                background: 'linear-gradient(45deg, rgba(6,35,64,1) 24%, rgba(6,10,64,1) 49%, rgba(11,4,46,1) 68%)',
+                                borderRadius: '10px',
+                            }}
+                        >
+                            <div className="modal-login-home">
+                                <h1>MovieFinder</h1>
+                                <div className="modal-login-body">
+                                    <div className="modal-login-text">
+                                        <h2>Login</h2>
+                                    </div>
+                                    <div className="modal-login-input-label">
+                                        <Input
+                                            color="neutral"
+                                            value={emailLogin}
+                                            disabled={false}
+                                            size="md"
+                                            onChange={handleEmailLoginChange}
+                                            placeholder="Email..."
+
+                                        />
+                                        <Input
+                                            color="neutral"
+                                            value={passwordLogin}
+                                            disabled={false}
+                                            placeholder="Senha..."
+                                            size="md"
+                                            onChange={handlePasswordLoginChange}
+                                            type="password"
+                                        />
+                                    </div>
+                                    <div className="modal-login-in">
+                                        <p>Esqueceu a senha?</p>
+                                        <Button className="modal-button-login" onClick={handleLogin}>Entrar</Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </Rodal>
+```
+
+
