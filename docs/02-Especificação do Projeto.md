@@ -87,13 +87,12 @@ Os requisitos do projeto descrevem a maneira de interação dos usuários com o 
 
 |ID     | Descrição do Requisito  |Prioridade |
 |-------|-------------------------|----|
-|RNF-001| A aplicação deve permitir que o usuário opte por vincular sua conta Google à aplicação ou utilizá-la de forma pontual e sem criação de vínculo. | MÉDIA | 
-|RNF-002| A aplicação deve permitir que o usuário, ao vincular sua conta Google à aplicação, tenha acesso a um perfil com preferências personalizáveis. |  MÉDIA | 
-|RNF-003| A aplicação deve ser publicada em um ambiente acessível publicamente na Internet (GitHub Pages…). |  ALTA | 
-|RNF-004| A aplicação deverá ser responsiva permitindo a visualização em um celular de forma adequada. |  ALTA |
-|RNF-005| A aplicação deve ter bom nível de contraste entre os elementos da tela em conformidade. |  MÉDIA |
-|RNF-006| A aplicação deve ser compatível com os principais navegadores do mercado (Google Chrome, Firefox, Microsoft Edge). |  ALTA |
-|RNF-007| A aplicação deve retornar resultados equivalentes nos idiomas português e inglês. |  BAIXA |
+|RNF-001| A aplicação deve permitir que o usuário possuir uma conta na aplicação, tendo acesso a um perfil com preferências personalizáveis. |  ALTA | 
+|RNF-002| A aplicação deve ser publicada em um ambiente acessível publicamente na Internet. |  ALTA | 
+|RNF-003| A aplicação deverá ser responsiva permitindo a visualização em um celular de forma adequada. |  ALTA |
+|RNF-004| A aplicação deve ter bom nível de contraste entre os elementos da tela em conformidade. |  MÉDIA |
+|RNF-005| A aplicação deve ser compatível com os principais navegadores do mercado (Google Chrome, Firefox, Microsoft Edge). |  ALTA |
+|RNF-006| A aplicação deve retornar resultados equivalentes nos idiomas português e inglês. |  BAIXA |
 
 ## Restrições
 
