@@ -606,7 +606,6 @@ function Home() {
                                         />
                                     </div>
                                     <div className="modal-login-in">
-                                        <p>Esqueceu a senha?</p>
                                         <Button className="modal-button-login" onClick={handleLogin}>Entrar</Button>
                                     </div>
                                 </div>
