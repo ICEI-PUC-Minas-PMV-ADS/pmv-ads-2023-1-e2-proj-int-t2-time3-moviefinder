@@ -1,5 +1,4 @@
-# MovieFinder
-
+# MovieFinder  
 `Análise e Desenvolvimento de Sistemas`
 
 `Projeto – Desenvolvimento de uma Aplicação Interativa`
@@ -22,7 +21,11 @@
 
 ## Instruções de utilização
 
-https://pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder.vercel.app/
+<p align="justify">A aplicação deve ser acessada no link disponibilizado neste tópico. Logo na página inicial já haverá um carrossel dos filmes e logo a baixo há recomendações de filmes por gênero. Clicando em pesquisar localizado no canto superior esquerdo, é possível realizar as buscas dos filmes desejados. Ao fazer a busca e clicar no filme desejado, o usuário é encaminhado para uma página onde se encontram os detalhes dos filmes e outras informações.</p>
+
+<p align="justify">Caso o visitante opte por aumentar a interatividade e sua experiencia com a aplicação, ele deve se cadastrar acessando o botão no canto superior direito e realizar seu cadastro. Em seguida, deve realizar login. Uma vez logado é possível favoritar e ver uma lista de recomendado de acordo com seus favoritos e preferências.</p>
+
+https://pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder.vercel.app
 
 # Documentação
 
@@ -48,4 +51,4 @@ https://pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder.vercel.app/
 
 # Apresentação
 
-<li><a href="presentation/README.md"> Apresentação da solução</a></li>
+[Video - Apresentação](https://sgapucminasbr-my.sharepoint.com/personal/886953_sga_pucminas_br/_layouts/15/stream.aspx?id=%2Fpersonal%2F886953%5Fsga%5Fpucminas%5Fbr%2FDocuments%2Fapresenta%C3%A7%C3%A3o%2Emp4&ga=1)
