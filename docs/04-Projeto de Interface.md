@@ -37,8 +37,3 @@ São protótipos usados em design de interface para sugerir a estrutura de um si
 
 ![image](https://user-images.githubusercontent.com/114882542/229662186-e2353ef3-eef2-4345-ae4f-b7f52f13efea.png)
 
-### Página de Recuperação de senha
-
-![image](https://user-images.githubusercontent.com/114882542/229662437-aacdabcd-df16-4de5-a042-149249d38a14.png)
-
-
