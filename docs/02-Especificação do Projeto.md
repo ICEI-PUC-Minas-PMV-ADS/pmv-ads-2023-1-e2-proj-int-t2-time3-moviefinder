@@ -89,10 +89,9 @@ Os requisitos do projeto descrevem a maneira de interação dos usuários com o 
 |-------|-------------------------|----|
 |RNF-001| A aplicação deve permitir que o usuário possuir uma conta na aplicação, tendo acesso a um perfil com preferências personalizáveis. |  ALTA | 
 |RNF-002| A aplicação deve ser publicada em um ambiente acessível publicamente na Internet. |  ALTA | 
-|RNF-003| A aplicação deverá ser responsiva permitindo a visualização em um celular de forma adequada. |  ALTA |
-|RNF-004| A aplicação deve ter bom nível de contraste entre os elementos da tela em conformidade. |  MÉDIA |
-|RNF-005| A aplicação deve ser compatível com os principais navegadores do mercado (Google Chrome, Firefox, Microsoft Edge). |  ALTA |
-|RNF-006| A aplicação deve retornar resultados equivalentes nos idiomas português e inglês. |  BAIXA |
+|RNF-003| A aplicação deve ter bom nível de contraste entre os elementos da tela em conformidade. |  MÉDIA |
+|RNF-004| A aplicação deve ser compatível com os principais navegadores do mercado (Google Chrome, Firefox, Microsoft Edge). |  ALTA |
+|RNF-005| A aplicação deve retornar resultados equivalentes nos idiomas português e inglês. |  BAIXA |
 
 ## Restrições
 
@@ -114,6 +113,5 @@ A tabela a seguir indica as restrições para o desenvolvimento e realização d
 ## Backlog e Plano de Sprints
 
 A equipe definiu a ferramenta Trello como plataforma para o gerenciamento de projeto e organização e distribuição de tarefas.
-
 
 [Trello - MovieFinder](https://trello.com/invite/b/8tOr5q9j/ATTIeae19eb8d4a66751c9411544031a3d815E47F8FA/kanban-moviefinder)
