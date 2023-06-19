@@ -1461,7 +1461,7 @@ const handleGenreChange = e => {
                             </div>
 ```
 
-## Login e validação de campos durante o login (RF-07 e RF-08)
+## Login e validação de campos durante o login (RF-08 e RF-09)
 
 Ao acessar a aplicação no canto superior direito há o campo de login. Ao selecionar este campo o modal de login é exibido com campos de e-mail e senha para preenchimento. Quando o usuário coloca os dados incorretos ou deixa algum campo sem preenchimento uma mensagem de alerta é exibida. Quando os campos são colocados corretamente conforme o cadastro realizado, uma mensagem de sucesso é exibida. O usuário é encaminhado para a página principal e seu nome é exibido no canto superior direito.
 
@@ -1472,9 +1472,9 @@ Na imagem acima é possível observar a mensagem de alerta quando algum campo é
 Na imagem acima é possível observar a mensagem de sucesso do login e em seguida, é possível observar o nome do usuário no canto superior direito da tela.
 
 ### Requisitos atendidos
-RF-07 - A aplicação deve permitir ao usuário realizar login na plataforma.
+RF-08 - A aplicação deve permitir ao usuário realizar login na plataforma.
 
-RF-08 - A aplicação deve realizar a verificação de login de usuário na plataforma.
+RF-09 - A aplicação deve realizar a verificação de login de usuário na plataforma.
 
 ### Artefatos da funcionalidade
  
