@@ -5,20 +5,28 @@ Neste tópico será abordada a Arquitetura da Solução, no qual é descrito a o
 ## Diagrama de Classes
 
 <p align = "center">
-<img src="img/Daigrama de classes.png" />
+ 
+![diagrama3](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/898bd8c8-af0e-43fe-a878-45ec42895d92)
+
 </p>
 
 ## Modelo ER (Projeto Conceitual)
 
 <p align = "center">
-<img src="img/modelo_entidade_relacionamento.jpg" />
+
+![diagrama2](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/635c381d-f0a8-47df-b418-581e5d37c0da)
+
 </p>
 
 ## Projeto da Base de Dados
 
 O projeto da base de dados corresponde à representação das entidades e relacionamentos identificadas no Modelo ER, no formato de tabelas, com colunas e chaves primárias/estrangeiras necessárias para representar corretamente as restrições de integridade.
- 
-![image](https://user-images.githubusercontent.com/114882542/229652230-dfe16731-7517-46d6-a6e5-7da5c34c4646.png)
+
+<p align = "center">
+
+![diagrama1](https://github.com/ICEI-PUC-Minas-PMV-ADS/pmv-ads-2023-1-e2-proj-int-t2-time3-moviefinder/assets/114538749/b135b888-fe8c-4681-8a86-72bc5ce9f17f)
+
+</p>
 
 ## Tecnologias Utilizadas
 
