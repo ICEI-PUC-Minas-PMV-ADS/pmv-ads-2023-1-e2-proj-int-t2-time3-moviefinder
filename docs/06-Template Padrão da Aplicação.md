@@ -28,8 +28,3 @@ Layout padrão da aplicação que será utilizado em todas as páginas com a def
 
 ![image](https://user-images.githubusercontent.com/114882542/236656782-fca02fcb-eb10-4adc-b443-f0d0f759ecb9.png)
 
-## Tela de Recuperação de Senha ##
-
-![image](https://user-images.githubusercontent.com/114882542/236656811-f4db710e-42d9-4f47-9a38-1a9f78ad8d68.png)
-
-
